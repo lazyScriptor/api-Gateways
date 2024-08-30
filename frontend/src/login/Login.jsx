@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography, IconButton, InputAdornment, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Paper,
+} from "@mui/material";
 import "./login.css";
 import monitor from "../assets/monitor.png";
 import element from "../assets/element1.png";
@@ -9,9 +17,10 @@ import Close from "@mui/icons-material/Close";
 import purple from "../assets/purple.png";
 import green from "../assets/green.png";
 import { useNavigate } from "react-router-dom";
+import sltLogo from "../assets/slt-digital.png";
 
 export default function Login() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -45,19 +54,31 @@ export default function Login() {
       display="flex"
       width="100vw"
       height="100vh"
-      sx={{ backgroundColor: "#15172E", overflow: "hidden", position: "relative" }}
+      sx={{
+        backgroundColor: "#15172E",
+        overflow: "hidden",
+        position: "relative",
+      }}
     >
       <Box width="28vw" display="flex">
         <img
+          src={sltLogo}
+          style={{ width: "300px", position: "absolute", top: "20px" }}
+          alt=""
+        />
+        {/* <img
           src={monitor}
           style={{ width: "300px", position: "absolute", top: "20px" }}
-        />
+        /> */}
         <Box sx={{ mt: "25vh" }}>
           <Typography variant="h2" sx={{ color: "white", ml: 5 }}>
-            Sign In to Monitor
+            Sign In to the System
           </Typography>
           <Box sx={{ height: "100px" }} />
-          <Typography variant="h5" sx={{ color: "white", ml: 5, lineHeight: 1.9 }}>
+          <Typography
+            variant="h5"
+            sx={{ color: "white", ml: 5, lineHeight: 1.9 }}
+          >
             If you don't have an <br /> account you can
           </Typography>
           <a
@@ -84,7 +105,7 @@ export default function Login() {
           transition: "transform 0.1s ease-out",
         }}
       >
-        <img src={element} />
+        <img src={element} style={{ width: "20vw" }} />
       </Box>
       <Box
         gap={4}
@@ -95,7 +116,7 @@ export default function Login() {
         flexDirection="column"
       >
         <TextField
-        component={Paper}
+          component={Paper}
           sx={{
             zIndex: 10,
             borderRadius: 2,
@@ -124,7 +145,7 @@ export default function Login() {
           }}
         />
         <TextField
-        component={Paper}
+          component={Paper}
           sx={{
             zIndex: 10,
             borderRadius: 2,
@@ -152,9 +173,9 @@ export default function Login() {
           }}
         />
         <Button
-        onClick={()=>{
-            navigate('/hero')
-        }}
+          onClick={() => {
+            navigate("/hero");
+          }}
           variant="contained"
           sx={{
             mt: 5,
