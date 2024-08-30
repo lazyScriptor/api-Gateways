@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 
-// Create a pool with `mysql2/promise`
+
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
@@ -11,13 +11,10 @@ const pool = mysql.createPool({
 export const getUsers = async (id) => {
   try {
 
-    // Execute the query
     const [rows] = await pool.query(
       "SELECT * FROM user WHERE u_id = ?",
       [id]
     );
-
-
 
     return rows;
   } catch (error) {

@@ -5,14 +5,13 @@ const router = express.Router();
 
 // Use a wildcard to capture all path segments after serverName
 router.all("/:serverName/*", async (req, res) => {
-
-// url --> http://localhost:3000/fakeapi/users/add
+  // url --> http://localhost:3000/fakeapi/users/add
   const serverName = req.params.serverName; // --> fakeapi
-  const path = req.params[0];// --> users/add
- 
+  const path = req.params[0]; // --> users/add
+
   let targetUrl;
 
-  // Determine the target URL based on the serverName
+  // target URL based on the serverName
   if (serverName === "fakeapi") {
     targetUrl = `http://localhost:3001/${path}`;
   } else if (serverName === "thunderapi") {
@@ -20,10 +19,9 @@ router.all("/:serverName/*", async (req, res) => {
   } else {
     return res.status(404).send("API name does not exist");
   }
-  
+
   try {
     let response;
-
     // Forward the request to the target server based on the method
     if (req.method === "GET") {
       response = await axios.get(targetUrl);
@@ -32,7 +30,6 @@ router.all("/:serverName/*", async (req, res) => {
     } else {
       return res.status(405).send("Method Not Allowed");
     }
-
     res.send(response.data);
   } catch (error) {
     console.error("Error making API request:", error);
