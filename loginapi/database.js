@@ -42,36 +42,29 @@ export const addUser = async (user) => {
     throw error;
   }
 };
-export const getAuthDetails = async (credentials) => {
+export const getUserByUsername = async (username) => {
+  try {
+    const [results] = await pool.query("SELECT u_username FROM user WHERE u_username = ?", [username]);
+    return results.length > 0;  // Return true if the user exists, false otherwise
+  } catch (error) {
+    console.error("Error in repository:", error);
+    throw new Error("Database query error");
+  }
+};
+
+// Check if the username and password match
+export const getUserAuthDetails = async (username, password) => {
   try {
     const [results] = await pool.query(
-      "SELECT u_username FROM user WHERE u_username = ?",
-      [credentials.username]
+      `SELECT user_role.ur_type, user.u_fname, user.u_lname
+       FROM user
+       JOIN user_role ON user.u_urid = user_role.ur_id
+       WHERE user.u_username = ? AND user.u_password = ?`,
+      [username, password]
     );
-    if (results.length == 0) {
-      console.log("test");
-      return { results: "Username not found", authStatus: false };
-    } else {
-      const [results] = await pool.query(
-        "SELECT user_role.ur_type,user.u_fname,user.u_lname FROM user JOIN user_role ON user.u_urid=user_role.ur_id WHERE user.u_username =? AND user.u_password =?",
-        [credentials.username, credentials.password]
-      );
-      if (results.length > 0) {
-        return { results: results[0], authStatus: true };
-      } else {
-        return {
-          results: "User name and password missmatched",
-          authStatus: false,
-        };
-      }
-    }
-  } catch (err) {
-    console.log("Error", err);
-    return {
-      results: "Error occured in the backend Login API",
-      authStatus: false,
-    };
-
-    console.log(err);
+    return results.length > 0 ? results[0] : null;  // Return the user details if authenticated
+  } catch (error) {
+    console.error("Error in repository:", error);
+    throw new Error("Database query error");
   }
 };

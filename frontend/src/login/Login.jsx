@@ -19,21 +19,32 @@ import green from "../assets/green.png";
 import { useNavigate } from "react-router-dom";
 import sltLogo from "../assets/slt-digital.png";
 import axios from "axios";
+import { useForm } from "react-hook-form"; // Import useForm from react-hook-form
+import { yupResolver } from "@hookform/resolvers/yup"; // Import yupResolver from hookform/resolvers
+import * as yup from "yup"; // Import yup
+
+
+// Define Yup schema for validation
+const schema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
 
 export default function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginErrorText, setLoginErrorText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loginErrorText, setLoginErrorText] = useState("");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema), // Integrate Yup schema with react-hook-form
+  });
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleClearUsername = () => setUsername("");
-  const handleUsernameChange = (event) => {
-    setLoginErrorText("");
-    setUsername(event.target.value);
-  };
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -49,14 +60,14 @@ export default function Login() {
     };
   }, []);
 
-  const handleLogin = async (username, password) => {
+  const onSubmit = async (data) => {
     const credentials = {
-      username,
-      password,
+      username: data.username,
+      password: data.password,
     };
-    console.log(credentials);
+
     await axios
-      .post("http://localhost:3000/login/authenticate", credentials)
+      .post(`${process.env.REACT_APP_API_URL}/login/authenticate`, credentials)
       .then((response) => {
         try {
           if (response.data.authStatus === true) {
@@ -71,6 +82,7 @@ export default function Login() {
         }
       });
   };
+
   const calculateTransform = () => {
     const xOffset = (mousePos.x - 0.5) * 50;
     const yOffset = (mousePos.y - 0.5) * 50;
@@ -94,10 +106,6 @@ export default function Login() {
           style={{ width: "300px", position: "absolute", top: "20px" }}
           alt=""
         />
-        {/* <img
-          src={monitor}
-          style={{ width: "300px", position: "absolute", top: "20px" }}
-        /> */}
         <Box sx={{ mt: "25vh" }}>
           <Typography variant="h2" sx={{ color: "white", ml: 5 }}>
             Sign In to the System
@@ -142,6 +150,8 @@ export default function Login() {
         alignItems="center"
         justifyContent="center"
         flexDirection="column"
+        component="form"
+        onSubmit={handleSubmit(onSubmit)} // Use handleSubmit from react-hook-form
       >
         <TextField
           component={Paper}
@@ -156,16 +166,12 @@ export default function Login() {
           id="outlined-basic"
           label="Enter username"
           variant="outlined"
-          value={username}
-          onChange={handleUsernameChange}
+          error={!!errors.username}
+          {...register("username")} // Register the username input with validation
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  aria-label="clear username"
-                  onClick={handleClearUsername}
-                  edge="end"
-                >
+                <IconButton aria-label="clear username" edge="end">
                   <Close />
                 </IconButton>
               </InputAdornment>
@@ -174,11 +180,6 @@ export default function Login() {
         />
         <TextField
           component={Paper}
-          value={password}
-          onChange={(e) => {
-            setLoginErrorText("");
-            setPassword(e.target.value);
-          }}
           sx={{
             zIndex: 10,
             borderRadius: 2,
@@ -191,6 +192,9 @@ export default function Login() {
           label="Password"
           variant="outlined"
           type={showPassword ? "text" : "password"}
+          error={!!errors.password}
+          // helperText={errors.password ? errors.password.message : ""}
+          {...register("password")} // Register the password input with validation
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -205,9 +209,13 @@ export default function Login() {
             ),
           }}
         />
-        <Typography sx={{ color: "red" }}>{loginErrorText}</Typography>
+        <Typography sx={{ color: "red" }}>
+          {errors.username?.message ||
+            errors.password?.message ||
+            loginErrorText}
+        </Typography>
         <Button
-          onClick={() => handleLogin(username, password)}
+          type="submit" // Set type to submit for form submission
           variant="contained"
           sx={{
             mt: 5,
