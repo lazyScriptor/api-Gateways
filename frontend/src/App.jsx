@@ -5,6 +5,7 @@ import Entry from "./Entry";
 import Attendance from "./pages/employee/Attendance";
 import Shifts from "./pages/employee/Shifts";
 import AttendanceFrontEnd from "./pages/employee/AttendanceFrontEnd";
+import TailwindSection from "./pages/employee/TailwindSection";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/shifts" element={<Shifts />} />
           <Route path="/attendance-fe" element={<AttendanceFrontEnd />} />
+          <Route path="/tailwind" element={<TailwindSection/>} />
         </Routes>
       </BrowserRouter>
     </>

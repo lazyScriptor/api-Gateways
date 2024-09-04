@@ -33,12 +33,17 @@ function Navbar() {
             </li>
             <li className="p-4" onClick={() => [navigate("/shifts")]}>
               <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
-                Shifts 
+                Shifts
               </button>
             </li>
             <li className="p-4" onClick={() => [navigate("/attendance-fe")]}>
               <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
                 AT New
+              </button>
+            </li>
+            <li className="p-4" onClick={() => [navigate("/tailwind")]}>
+              <button className="hover:text-lg hover:text-red-400 transition-all duration-300">
+                Tailwind
               </button>
             </li>
             <li className="p-4" onClick={() => [navigate("/")]}>

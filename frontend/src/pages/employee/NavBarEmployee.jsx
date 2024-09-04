@@ -36,6 +36,7 @@ function NavBarEmployee() {
             About
           </button>
         </li>
+  
         <li className="p-4" onClick={() => [navigate("/")]}>
           <button className="hover:text-lg hover:text-red-400 transition-all duration-300">
             Logout

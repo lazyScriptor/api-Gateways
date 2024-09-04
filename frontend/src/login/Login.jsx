@@ -18,10 +18,12 @@ import purple from "../assets/purple.png";
 import green from "../assets/green.png";
 import { useNavigate } from "react-router-dom";
 import sltLogo from "../assets/slt-digital.png";
+import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -43,6 +45,11 @@ export default function Login() {
     };
   }, []);
 
+  const handleLogin = async () => {
+    await axios.get("http://localhost:3000/login/authenticate").then((response) => {
+      console.log("this is the response from the server", response.data);
+    });
+  };
   const calculateTransform = () => {
     const xOffset = (mousePos.x - 0.5) * 50;
     const yOffset = (mousePos.y - 0.5) * 50;
@@ -146,6 +153,10 @@ export default function Login() {
         />
         <TextField
           component={Paper}
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
           sx={{
             zIndex: 10,
             borderRadius: 2,
@@ -173,9 +184,7 @@ export default function Login() {
           }}
         />
         <Button
-          onClick={() => {
-            navigate("/hero");
-          }}
+          onClick={handleLogin}
           variant="contained"
           sx={{
             mt: 5,

@@ -9,7 +9,7 @@ export default {
       colors: {
         'custom-blue': {
           DEFAULT: '#0353A4',  // Base blue color
-          '50': '#e3f2fd',    // Very light blue
+          '50': '#e3f2fd',    // Very light blue0
           '100': '#bbdefb',   // Light blue
           '200': '#90caf9',   // Lighter blue
           '300': '#64b5f6',   // Light blue
