@@ -1,5 +1,5 @@
 import express from "express";
-import { addUser, getUsers } from "./database.js";
+import { addUser, getAuthDetails, getUsers } from "./database.js";
 
 const app = express();
 const PORT = 3003;
@@ -8,8 +8,10 @@ app.use(express.json());
 app.get("/loginapi1", (req, res, next) => {
   res.send("This is from login api 1");
 });
-app.get("/authenticate", (req, res, next) => {
-  res.send("This is from login api auth");
+app.post("/authenticate", async(req, res, next) => {
+  const response=await getAuthDetails(req.body);
+  console.log(response)
+  res.send(response);
 });
 app.post("/users/add", async (req, res) => {
   const { u_id, u_pno, u_address, u_urid, u_fname, u_lname } = req.body;

@@ -24,12 +24,16 @@ export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginErrorText, setLoginErrorText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClearUsername = () => setUsername("");
-  const handleUsernameChange = (event) => setUsername(event.target.value);
+  const handleUsernameChange = (event) => {
+    setLoginErrorText("");
+    setUsername(event.target.value);
+  };
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -45,10 +49,27 @@ export default function Login() {
     };
   }, []);
 
-  const handleLogin = async () => {
-    await axios.get("http://localhost:3000/login/authenticate").then((response) => {
-      console.log("this is the response from the server", response.data);
-    });
+  const handleLogin = async (username, password) => {
+    const credentials = {
+      username,
+      password,
+    };
+    console.log(credentials);
+    await axios
+      .post("http://localhost:3000/login/authenticate", credentials)
+      .then((response) => {
+        try {
+          if (response.data.authStatus === true) {
+            navigate("/hero");
+            console.log(response.data.results);
+          } else {
+            setLoginErrorText(response.data.results);
+            console.log(response.data.results);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      });
   };
   const calculateTransform = () => {
     const xOffset = (mousePos.x - 0.5) * 50;
@@ -155,6 +176,7 @@ export default function Login() {
           component={Paper}
           value={password}
           onChange={(e) => {
+            setLoginErrorText("");
             setPassword(e.target.value);
           }}
           sx={{
@@ -183,8 +205,9 @@ export default function Login() {
             ),
           }}
         />
+        <Typography sx={{ color: "red" }}>{loginErrorText}</Typography>
         <Button
-          onClick={handleLogin}
+          onClick={() => handleLogin(username, password)}
           variant="contained"
           sx={{
             mt: 5,
