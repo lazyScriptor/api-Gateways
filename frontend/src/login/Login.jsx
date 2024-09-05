@@ -23,7 +23,6 @@ import { useForm } from "react-hook-form"; // Import useForm from react-hook-for
 import { yupResolver } from "@hookform/resolvers/yup"; // Import yupResolver from hookform/resolvers
 import * as yup from "yup"; // Import yup
 
-
 // Define Yup schema for validation
 const schema = yup.object().shape({
   username: yup.string().required("Username is required"),
@@ -67,7 +66,7 @@ export default function Login() {
     };
 
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/login/authenticate`, credentials)
+      .post(`https://beta.sltdigitalweb.lk/login/authenticate`, credentials)
       .then((response) => {
         try {
           if (response.data.authStatus === true) {
