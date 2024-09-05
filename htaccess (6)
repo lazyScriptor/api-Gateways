@@ -1,0 +1,26 @@
+# Enable RewriteEngine
+RewriteEngine On
+
+# Proxy Rules (Backend APIs)
+# These rules should take precedence over the frontend rules
+RewriteCond %{REQUEST_URI} ^/gateway
+RewriteRule ^gateway/(.*) http://localhost:3000/$1 [P,L]
+
+RewriteCond %{REQUEST_URI} ^/login
+RewriteRule ^login/(.*) http://localhost:3003/$1 [P,L]
+
+RewriteCond %{REQUEST_URI} ^/service1
+RewriteRule ^service1/(.*) http://localhost:3001/$1 [P,L]
+
+RewriteCond %{REQUEST_URI} ^/service2
+RewriteRule ^service2/(.*) http://localhost:3002/$1 [P,L]
+
+# Frontend Rules (React App)
+# Ensure these rules don't interfere with backend API routes
+RewriteCond %{REQUEST_URI} !^/(gateway|login|service1|service2)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /frontend/$1 [L]
+
+# Ensure index.html is served as the default file for the frontend
+DirectoryIndex /frontend/index.html
