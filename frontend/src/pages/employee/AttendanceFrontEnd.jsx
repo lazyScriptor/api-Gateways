@@ -9,6 +9,8 @@ import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
 import Navbar from "../../Navbar";
 import axios from "axios";
+const userId = localStorage.getItem("userId");
+
 function AttendanceFrontEnd() {
   const dateConvertions = (date) => {
     const currentDate = new Date();
@@ -22,7 +24,6 @@ function AttendanceFrontEnd() {
   };
 
   const handleClickIn = async () => {
-    const userId = localStorage.getItem("userId");
     const { data } = await axios.post(
       `${import.meta.env.VITE_API_URL}/thunder/attendance/in`,
       {
@@ -31,9 +32,19 @@ function AttendanceFrontEnd() {
         startTime: dateTimeConvertions(),
       }
     );
-    localStorage.setItem("sessionToken",data.insertId)
+    localStorage.setItem("sessionToken", data.insertId);
   };
-  const handleClickOut = () => {};
+  const handleClickOut = async () => {
+    const sessionToken = localStorage.getItem("sessionToken");
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_API_URL}/thunder/attendance/out`,
+      {
+        userId: userId,
+        sessionToken: sessionToken,
+        endTime:dateTimeConvertions()
+      }
+    );
+  };
   return (
     <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
       <Navbar />

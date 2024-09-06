@@ -1,24 +1,37 @@
-import { setAttendanceDetails } from "./database.js";
+import { setAttendanceInDetails, setAttendanceOutDetails } from "./database.js";
 
-export const setAttendanceDetailsService = async (body) => {
+export const setAttendanceInDetailsService = async (body) => {
   try {
-    const response = await setAttendanceDetails(body);
-    if (response) {
-
-      return {
-        insertId: response.data.insertId,
-        status: true,
-        message: "successfully added the user",
-      };
-    }
+    const response = await setAttendanceInDetails(body);
+    return {
+      insertId: response.insertId,
+      status: true,
+      message: "Successfully added the user",
+    };
   } catch (error) {
     console.error(
-      "User Id not found in the log.Please re login to the system and try"
+      "User Id not found in the log. Please re-login to the system and try."
     );
-    throw new Error({
+    throw {
       message:
-        "User Id not found in the log.Please re login to the system and try",
+        "User Id not found in the log. Please re-login to the system and try.",
       status: false,
-    });
+    };
+  }
+};
+
+export const setAttendanceOutDetailsService = async (body) => {
+  try {
+    const response = await setAttendanceOutDetails(body);
+    return {
+      status: true,
+      message: "Successfully updated the record",
+    };
+  } catch (error) {
+    console.error("Session related error occurred in thunderService");
+    throw {
+      message: "Session related error occurred in thunderService",
+      status: false,
+    };
   }
 };

@@ -1,5 +1,8 @@
 import express from "express";
-import { setAttendanceDetailsService } from "./thunderService.js";
+import {
+  setAttendanceInDetailsService,
+  setAttendanceOutDetailsService,
+} from "./thunderService.js";
 
 const app = express();
 const PORT = 3002;
@@ -13,8 +16,12 @@ app.get("/thunderapi1", (req, res) => {
 app.get("/thunderapi2", (req, res) => {
   res.send("This is from thunder server thunderapi2");
 });
-app.post("/attendance/in", async(req, res) => {
-  const response =  await setAttendanceDetailsService(req.body);
+app.post("/attendance/in", async (req, res) => {
+  const response = await setAttendanceInDetailsService(req.body);
+  res.send(response);
+});
+app.post("/attendance/out", async (req, res) => {
+  const response = await setAttendanceOutDetailsService(req.body);
   res.send(response);
 });
 
