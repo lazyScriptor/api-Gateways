@@ -1,4 +1,4 @@
-import mysql from 'mysql2';
+import mysql from "mysql2";
 
 const pool = mysql.createPool({
   host: "localhost",
@@ -7,19 +7,18 @@ const pool = mysql.createPool({
   database: "employee_attendance_db",
 });
 
-export const getUsers = () => {
-  return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return reject(err);
-      }
-      connection.query("SELECT * FROM user", (error, results) => {
-        connection.release();
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      });
-    });
-  });
+export const setAttendanceDetails = async (body) => {
+  try {
+    const [results] = await pool.promise().query(
+      `
+      INSERT INTO work_duration (wd_requesting_user_id, wd_date, wd_start_time, wd_end_time) VALUES (?, ?, ?, ?)
+      `,
+      [body.userId, body.date, body.startTime, null]
+    );
+
+    return { data: results };
+  } catch (error) {
+    console.error("Error in setAttendanceDetails repository", error);
+    return { data: null };
+  }
 };

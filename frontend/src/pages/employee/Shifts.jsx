@@ -9,12 +9,12 @@ import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
 import Navbar from "../../Navbar";
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 function Shifts() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -57,9 +57,9 @@ function Shifts() {
       >
         <Navbar />
         <Typography variant="h6">
-            <strong>Employee shifts</strong>
-          </Typography>
-          <Divider sx={{ m: 4 }} />
+          <strong>Employee shifts</strong>
+        </Typography>
+        <Divider sx={{ m: 4 }} />
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
             <Grid size={8}>
@@ -95,14 +95,15 @@ function Shifts() {
                 sx={{
                   gap: 2,
                   display: "flex",
-                  justifyContent: "flex-end",
+                  justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-            <Shifttable/>
+                <div className="max-w-[800px] mx-auto">
+                  <Shifttable />
+                </div>
               </Item>
             </Grid>
-        
           </Grid>
         </Box>
       </Box>
@@ -112,10 +113,9 @@ function Shifts() {
 
 export default Shifts;
 
-
- function Shifttable() {
+function Shifttable() {
   return (
-    <TableContainer component={Paper} elevation={5} sx={{borderRadius:2}}>
+    <TableContainer component={Paper} elevation={5} sx={{ borderRadius: 2 }}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
@@ -130,7 +130,7 @@ export default Shifts;
           {rows.map((row) => (
             <TableRow
               key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
                 {row.name}
@@ -151,9 +151,9 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
 ];

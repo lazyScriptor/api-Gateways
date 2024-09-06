@@ -59,7 +59,7 @@ export const getUserByUsername = async (username) => {
 export const getUserAuthDetails = async (username, password) => {
   try {
     const [results] = await pool.query(
-      `SELECT user_role.ur_type, user.u_fname, user.u_lname
+      `SELECT user.u_id,user_role.ur_type, user.u_fname, user.u_lname
        FROM user
        JOIN user_role ON user.u_urid = user_role.ur_id
        WHERE user.u_username = ? AND user.u_password = ?`,

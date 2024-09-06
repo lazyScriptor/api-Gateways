@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers } from "./database.js";
+import { setAttendanceDetailsService } from "./thunderService.js";
 
 const app = express();
 const PORT = 3002;
@@ -13,16 +13,9 @@ app.get("/thunderapi1", (req, res) => {
 app.get("/thunderapi2", (req, res) => {
   res.send("This is from thunder server thunderapi2");
 });
-
-app.get("/users", async (req, res) => {
-  try {
-    const users = await getUsers(); // Await the promise returned by getUsers
-    console.log(users);
-    res.json(users); // Send the users as JSON
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).send('Error fetching users');
-  }
+app.post("/attendance/in", async(req, res) => {
+  const response =  await setAttendanceDetailsService(req.body);
+  res.send(response);
 });
 
 app.listen(PORT, () => {

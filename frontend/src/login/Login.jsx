@@ -66,10 +66,21 @@ export default function Login() {
     };
 
     await axios
-      .post(`http://localhost:3000/login/authenticate`, credentials)
+      .post(
+        `${import.meta.env.VITE_API_URL}/login/authenticate`,
+        credentials
+      )
       .then((response) => {
         try {
           if (response.data.authStatus === true) {
+            localStorage.setItem("userType", response.data.results.ur_type);
+            localStorage.setItem("userId", response.data.results.u_id);
+            localStorage.setItem(
+              "userName",
+              `${response.data.results.u_fname} ${response.data.results.u_lname}`
+            );
+            localStorage.setItem("userType", response.data.results.ur_type);
+
             navigate("/hero");
             console.log(response.data.results);
           } else {

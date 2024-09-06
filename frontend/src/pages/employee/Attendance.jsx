@@ -1,4 +1,11 @@
-import { Box, Button, Divider, Paper, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import Navbar from "../../Navbar";
 import Avatar from "@mui/material/Avatar";
@@ -58,13 +65,19 @@ function Attendance() {
               </div>
               <div className="col-span-8 flex gap-2 justify-end items-center">
                 <h1 className="mr-2">Start date</h1>
-                <TextField type="date" sx={{ backgroundColor: "transparent" }} />
+                <TextField
+                  type="date"
+                  sx={{ backgroundColor: "transparent" }}
+                />
                 <h1 className="mr-2">End date</h1>
-                <TextField type="date" sx={{ backgroundColor: "transparent" }} />
+                <TextField
+                  type="date"
+                  sx={{ backgroundColor: "transparent" }}
+                />
               </div>
               {/* Row 3 */}
-              <div className="col-span-12">
-                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none">
+              <div className="col-span-12 flex justify-center">
+                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none max-w-[800px]">
                   <AttendanceTable />
                 </div>
               </div>
