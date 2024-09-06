@@ -1,5 +1,6 @@
 import express from "express";
-import {getAuthDetailsService} from './loginService.js'
+import { getAuthDetailsService } from "./loginService.js";
+import { getUsers } from "./database.js";
 
 const app = express();
 const PORT = 3003;
@@ -8,9 +9,9 @@ app.use(express.json());
 app.get("/loginapi1", (req, res, next) => {
   res.send("This is from login api 1");
 });
-app.post("/authenticate", async(req, res, next) => {
-  const response=await getAuthDetailsService(req.body);
-  console.log(response)
+app.post("/authenticate", async (req, res, next) => {
+  const response = await getAuthDetailsService(req.body);
+  console.log(response);
   res.send(response);
 });
 // app.post("/users/add", async (req, res) => {
@@ -29,20 +30,16 @@ app.post("/authenticate", async(req, res, next) => {
 //     res.status(500).send("Error adding user to the database.");
 //   }
 // });
-// app.get("/users/:id", async (req, res) => {
-//   try {
-//     const users = await getUsers(req.params.id); // Await the promise returned by getUsers
-//     console.log(users);
-//     res.json(users); // Send the users as JSON
-//   } catch (error) {
-//     console.error('Error fetching users:', error);
-//     res.status(500).send('Error fetching users');
-//   }
-// });
-
-
-
-
+app.get("/users/:id", async (req, res) => {
+  try {
+    const users = await getUsers(req.params.id); // Await the promise returned by getUsers
+    console.log(users);
+    res.json(users); // Send the users as JSON
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("Error fetching users");
+  }
+});
 
 app.listen(PORT, () => {
   console.log("fake API server started at port ", PORT);

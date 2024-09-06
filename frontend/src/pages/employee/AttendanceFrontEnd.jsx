@@ -16,6 +16,7 @@ const userId = localStorage.getItem("userId");
 function AttendanceFrontEnd() {
   const [inBtnStatus, setInBtnStatus] = useState(false);
   const [outBtnStatus, setOutBtnStatus] = useState(true);
+  const [sessionToken, setSessionToken] = useState("");
 
   const dateConvertions = (date) => {
     const currentDate = new Date();
@@ -41,6 +42,7 @@ function AttendanceFrontEnd() {
           startTime: dateTimeConvertions(),
         }
       );
+      setSessionToken(data.insertId);
       localStorage.setItem("sessionToken", data.insertId);
 
       // Optionally, you can set a success message here
@@ -75,8 +77,17 @@ function AttendanceFrontEnd() {
     }
   };
   return (
-    <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
-      <Navbar />
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "end",
+        backgroundColor: "#fafafc",
+        minWidth: "100vw",
+        minHeight: "100vh",
+        height: "auto",
+      }}
+    >
 
       <Box
         component={Paper}
@@ -89,24 +100,31 @@ function AttendanceFrontEnd() {
           minHeight: "85vh",
           height: "auto",
           mb: 1,
+          mt:10,
           borderRadius: 2,
         }}
       >
-        <Typography variant="h6">
-          <strong>Employee attendance view</strong>
-        </Typography>
+        <Navbar /> 
+        <Box sx={{ display: "flex" }}>
+          <Typography variant="h6">
+            <strong>Employee attendance view</strong>
+          </Typography>
+          <Box flexGrow={1} />
+          <Typography variant="h6">Token number: {sessionToken}</Typography>
+        </Box>
+
         <Divider sx={{ m: 4 }} />
         <div className="max-w-[1240px] mx-auto md:grid lg:grid-cols-2 p-8 justify-center items-center h-max ">
-          <Box sx={{ p: 2 ,maxWidth:"300px" }} >
-            <Paper sx={{ p: 2 ,borderRadius:3}} elevation={5}>
+          <Box sx={{ p: 2, maxWidth: "300px" }}>
+            <Paper sx={{ p: 2, borderRadius: 3 }} elevation={5}>
               <Typography align="center" variant="h6">
                 Attendance Form
               </Typography>
               <Divider sx={{ m: 2 }} />
               <Box sx={{ width: "100%", height: "50px" }}>
-                <Typography variant="caption">Date</Typography>
+                <Typography variant="caption">Today : {dateConvertions()}</Typography>
                 <br />
-                <Typography variant="caption">Total working time</Typography>
+                <Typography variant="caption">Total worked time for today {}</Typography>
               </Box>
               <Box
                 sx={{
@@ -145,19 +163,22 @@ function AttendanceFrontEnd() {
             </Paper>
           </Box>
           <Box sx={{ p: 2 }}>
-            <Paper sx={{ p: 2 ,borderRadius:3}} elevation={5}>
+            <Paper sx={{ p: 2, borderRadius: 3 }} elevation={5}>
               <Typography align="center" variant="h6">
                 Past attendance list
               </Typography>
               <Divider sx={{ m: 2 }} />
               <Box>
-                <AttendanceTable inBtnStatus={inBtnStatus} outBtnStatus={outBtnStatus}/>
+                <AttendanceTable
+                  inBtnStatus={inBtnStatus}
+                  outBtnStatus={outBtnStatus}
+                />
               </Box>
             </Paper>
           </Box>
         </div>
       </Box>
-    </div>
+    </Box>
   );
 }
 

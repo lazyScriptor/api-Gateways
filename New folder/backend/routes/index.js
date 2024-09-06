@@ -12,4 +12,3 @@ app.use("/thunder", proxy("http://localhost:3002"));
 app.use("/login", proxy("http://localhost:3003"));
 
 export default app;
-
