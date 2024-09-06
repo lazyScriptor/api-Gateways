@@ -77,9 +77,9 @@ function Attendance() {
               </div>
               {/* Row 3 */}
               <div className="col-span-12 flex justify-center">
-                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none max-w-[800px]">
+                <Paper elevation={5} sx={{borderRadius:5}}>
                   <AttendanceTable />
-                </div>
+                </Paper>
               </div>
               <div className="col-span-4"></div>
             </div>

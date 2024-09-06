@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import NavBarEmployee from "./NavBarEmployee";
 import { styled } from "@mui/material/styles";
@@ -9,9 +9,14 @@ import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
 import Navbar from "../../Navbar";
 import axios from "axios";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutIcon from "@mui/icons-material/Logout";
 const userId = localStorage.getItem("userId");
 
 function AttendanceFrontEnd() {
+  const [inBtnStatus, setInBtnStatus] = useState(false);
+  const [outBtnStatus, setOutBtnStatus] = useState(true);
+
   const dateConvertions = (date) => {
     const currentDate = new Date();
     const currentDateString = currentDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
@@ -24,26 +29,50 @@ function AttendanceFrontEnd() {
   };
 
   const handleClickIn = async () => {
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_API_URL}/thunder/attendance/in`,
-      {
-        userId: userId,
-        date: dateConvertions(),
-        startTime: dateTimeConvertions(),
-      }
-    );
-    localStorage.setItem("sessionToken", data.insertId);
+    setInBtnStatus(true); // Set button status to loading or disabled
+    setOutBtnStatus(false);
+    try {
+      console.log(dateTimeConvertions());
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/thunder/attendance/in`,
+        {
+          userId: userId,
+          date: dateConvertions(),
+          startTime: dateTimeConvertions(),
+        }
+      );
+      localStorage.setItem("sessionToken", data.insertId);
+
+      // Optionally, you can set a success message here
+    } catch (error) {
+      console.error("Error occurred while marking attendance in:", error);
+      // Error occurred, set button status to error or reset
+      setInBtnStatus(false);
+      // Optionally, you can set an error message here
+    }
   };
+
   const handleClickOut = async () => {
-    const sessionToken = localStorage.getItem("sessionToken");
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_API_URL}/thunder/attendance/out`,
-      {
-        userId: userId,
-        sessionToken: sessionToken,
-        endTime:dateTimeConvertions()
-      }
-    );
+    setInBtnStatus(false);
+    setOutBtnStatus(true); // Set button status to loading or disabled
+    try {
+      const sessionToken = localStorage.getItem("sessionToken");
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/thunder/attendance/out`,
+        {
+          userId: userId,
+          sessionToken: sessionToken,
+          endTime: dateTimeConvertions(),
+        }
+      );
+
+      // Optionally, you can set a success message here
+    } catch (error) {
+      console.error("Error occurred while marking attendance out:", error);
+      // Error occurred, set button status to error or reset
+      setOutBtnStatus(false);
+      // Optionally, you can set an error message here
+    }
   };
   return (
     <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
@@ -67,9 +96,9 @@ function AttendanceFrontEnd() {
           <strong>Employee attendance view</strong>
         </Typography>
         <Divider sx={{ m: 4 }} />
-        <div className="max-w-[1240px] mx-auto md:grid lg:grid-cols-2 p-8 justify-center items-center h-max">
-          <Box sx={{ p: 2 }}>
-            <Paper sx={{ p: 2 }} elevation={5}>
+        <div className="max-w-[1240px] mx-auto md:grid lg:grid-cols-2 p-8 justify-center items-center h-max ">
+          <Box sx={{ p: 2 ,maxWidth:"300px" }} >
+            <Paper sx={{ p: 2 ,borderRadius:3}} elevation={5}>
               <Typography align="center" variant="h6">
                 Attendance Form
               </Typography>
@@ -87,23 +116,42 @@ function AttendanceFrontEnd() {
                   m: 2,
                 }}
               >
-                <Button variant="outlined" onClick={handleClickIn}>
-                  In
+                <Button
+                  disabled={inBtnStatus}
+                  sx={{
+                    backgroundColor: "#7BF300",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#6abf00" },
+                  }}
+                  variant="contained"
+                  onClick={handleClickIn}
+                >
+                  <LoginIcon />
                 </Button>
-                <Button variant="outlined" onClick={handleClickOut}>
-                  Out
+
+                <Button
+                  disabled={outBtnStatus}
+                  sx={{
+                    backgroundColor: "#F3007B",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#c70060" },
+                  }}
+                  variant="contained"
+                  onClick={handleClickOut}
+                >
+                  <LogoutIcon />
                 </Button>
               </Box>
             </Paper>
           </Box>
           <Box sx={{ p: 2 }}>
-            <Paper sx={{ p: 2 }} elevation={5}>
+            <Paper sx={{ p: 2 ,borderRadius:3}} elevation={5}>
               <Typography align="center" variant="h6">
                 Past attendance list
               </Typography>
               <Divider sx={{ m: 2 }} />
               <Box>
-                <AttendanceTable />
+                <AttendanceTable inBtnStatus={inBtnStatus} outBtnStatus={outBtnStatus}/>
               </Box>
             </Paper>
           </Box>

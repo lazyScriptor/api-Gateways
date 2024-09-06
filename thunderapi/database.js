@@ -1,17 +1,14 @@
 // database.js
-import mysql from 'mysql2/promise';
+import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'employee_attendance_db',
-  connectionLimit: 10, // Adjust as needed
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "employee_attendance_db",
 });
 
 export const setAttendanceInDetails = async (body) => {
-  console.log(body)
-
   try {
     const [results] = await pool.query(
       `
@@ -21,13 +18,12 @@ export const setAttendanceInDetails = async (body) => {
     );
     return results;
   } catch (error) {
-    console.error('Error in setAttendanceInDetails:', error);
+    console.error("Error in setAttendanceInDetails:", error);
     throw error;
   }
 };
 
 export const setAttendanceOutDetails = async (body) => {
-  console.log(body)
   try {
     const [results] = await pool.query(
       `
@@ -37,7 +33,21 @@ export const setAttendanceOutDetails = async (body) => {
     );
     return results;
   } catch (error) {
-    console.error('Error in setAttendanceOutDetails:', error);
+    console.error("Error in setAttendanceOutDetails:", error);
+    throw error;
+  }
+};
+export const getUserInOutDetails = async (userId) => {
+  try {
+    const [response] = await pool.query(
+      `
+      SELECT * FROM work_duration WHERE wd_requesting_user_id = ?
+      `,
+      [userId]
+    );
+    return response;
+  } catch (error) {
+    console.error("Error in getUserDetails:", error);
     throw error;
   }
 };

@@ -1,4 +1,4 @@
-import { setAttendanceInDetails, setAttendanceOutDetails } from "./database.js";
+import { getUserInOutDetails, setAttendanceInDetails, setAttendanceOutDetails } from "./database.js";
 
 export const setAttendanceInDetailsService = async (body) => {
   try {
@@ -31,6 +31,26 @@ export const setAttendanceOutDetailsService = async (body) => {
     console.error("Session related error occurred in thunderService");
     throw {
       message: "Session related error occurred in thunderService",
+      status: false,
+    };
+  }
+};
+export const getUserInOutDetailsService = async (userId) => {
+  try {
+    const response = await getUserInOutDetails(userId);
+   
+    return {
+      data: response,
+      status: true,
+      message: "Successfully fetched",
+    };
+  } catch (error) {
+    console.error(
+      "Get user inout detail service error occured in thnderService"
+    );
+    throw {
+      data: null,
+      message: "Get user inout detail service error occured in thnderService",
       status: false,
     };
   }
