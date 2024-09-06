@@ -11,17 +11,9 @@ import Navbar from "../../Navbar";
 
 function AttendanceFrontEnd() {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "end",
-        backgroundColor: "#fafafc",
-        minWidth: "100vw",
-        minHeight: "100vh",
-        height: "auto",
-      }}
-    >
+    <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
+      <Navbar />
+
       <Box
         component={Paper}
         elevation={10}
@@ -36,14 +28,13 @@ function AttendanceFrontEnd() {
           borderRadius: 2,
         }}
       >
-        <Navbar />
-        <Box>
+       
           <Typography variant="h6">
             <strong>Employee attendance view</strong>
           </Typography>
           <Divider sx={{ m: 4 }} />
-          <Box display={"flex"} height={"100%"}>
-            <Box sx={{ width: "50%", p: 2 }}>
+          <div className="max-w-[1240px] mx-auto md:grid lg:grid-cols-2 p-8 justify-center items-center h-max">
+            <Box sx={{  p: 2 }}>
               <Paper sx={{ p: 2 }} elevation={5}>
                 <Typography align="center" variant="h6">
                   Attendance Form
@@ -67,7 +58,7 @@ function AttendanceFrontEnd() {
                 </Box>
               </Paper>
             </Box>
-            <Box sx={{ width: "50%", p: 2 }}>
+            <Box sx={{  p: 2 }}>
               <Paper sx={{ p: 2 }} elevation={5}>
                 <Typography align="center" variant="h6">
                   Past attendance list
@@ -78,10 +69,10 @@ function AttendanceFrontEnd() {
                 </Box>
               </Paper>
             </Box>
-          </Box>
-        </Box>
+          </div>
+         
       </Box>
-    </Box>
+    </div>
   );
 }
 

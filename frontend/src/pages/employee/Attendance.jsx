@@ -1,38 +1,14 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { Box, Button, Divider, Paper, TextField, Typography } from "@mui/material";
 import React from "react";
-import NavBarEmployee from "./NavBarEmployee";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid2";
-import SearchIcon from "@mui/icons-material/Search";
+import Navbar from "../../Navbar";
 import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
-import Navbar from "../../Navbar";
-function Attendance() {
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    elevation: 0, // Set the elevation to 0 here
-    ...theme.applyStyles("dark", {
-      backgroundColor: "#1A2027",
-    }),
-  }));
+import SearchIcon from "@mui/icons-material/Search";
 
+function Attendance() {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "end",
-        backgroundColor: "#fafafc",
-        minWidth: "100vw",
-        minHeight: "100vh",
-        height: "auto",
-      }}
-    >
+    <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
+      <Navbar />
       <Box
         component={Paper}
         elevation={10}
@@ -47,20 +23,19 @@ function Attendance() {
           borderRadius: 2,
         }}
       >
-        <Navbar />
         <Typography variant="h6">
           <strong>Employee attendance approval form</strong>
         </Typography>
         <Divider sx={{ m: 4 }} />
+
         {/* Outer box of the grid */}
-        <Box sx={{ width: "100%", height: "100%" }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
+        <div className="w-full h-full">
+          <div className="flex-grow">
+            <div className="grid grid-cols-12 gap-2">
               {/* Row 1 */}
-              <Grid size={8}>
-                <Item elevation={0}>
+              <div className="col-span-8">
+                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
                   <TextField
-                    component={Paper}
                     size="small"
                     id="outlined-basic"
                     label="Search employee"
@@ -70,48 +45,35 @@ function Attendance() {
                   <Button>
                     <SearchIcon />
                   </Button>
-                </Item>
-              </Grid>
-              <Grid size={4} display={{}}>
-                <Item
-                  elevation={0}
-                  sx={{ display: "flex", justifyContent: "end" }}
-                >
+                </div>
+              </div>
+              <div className="col-span-4 flex justify-end">
+                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                </Item>
-              </Grid>
+                </div>
+              </div>
               {/* Row 2 */}
-              <Grid size={4}>
-                <Item elevation={0}></Item>
-              </Grid>
-              <Grid size={8}>
-                <Item
-                  elevation={0}
-                  sx={{
-                    gap: 2,
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                  }}
-                >
-                  <h1>Start date</h1>
-                  <TextField type="date" component={Paper} />
-                  <h1>End date</h1>
-                  <TextField type="date" component={Paper} />
-                </Item>
-              </Grid>
+              <div className="col-span-4">
+                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none"></div>
+              </div>
+              <div className="col-span-8 flex gap-2 justify-end items-center">
+                <h1 className="mr-2">Start date</h1>
+                <TextField type="date" sx={{ backgroundColor: "transparent" }} />
+                <h1 className="mr-2">End date</h1>
+                <TextField type="date" sx={{ backgroundColor: "transparent" }} />
+              </div>
               {/* Row 3 */}
-              <Grid size={12}>
-                <Item elevation={0}>
+              <div className="col-span-12">
+                <div className="bg-transparent p-1 text-center text-gray-600 shadow-none">
                   <AttendanceTable />
-                </Item>
-              </Grid>
-              <Grid size={4} display={{}}></Grid>
-            </Grid>
-          </Box>
-        </Box>
+                </div>
+              </div>
+              <div className="col-span-4"></div>
+            </div>
+          </div>
+        </div>
       </Box>
-    </Box>
+    </div>
   );
 }
 

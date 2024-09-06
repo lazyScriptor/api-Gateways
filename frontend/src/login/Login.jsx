@@ -66,7 +66,7 @@ export default function Login() {
     };
 
     await axios
-      .post(`https://beta.sltdigitalweb.lk/login/authenticate`, credentials)
+      .post(`http://localhost:3000/login/authenticate`, credentials)
       .then((response) => {
         try {
           if (response.data.authStatus === true) {
