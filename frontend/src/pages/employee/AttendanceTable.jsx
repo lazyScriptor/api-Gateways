@@ -65,7 +65,14 @@ export default function AttendanceTable({ inBtnStatus, outBtnStatus }) {
           </TableHead>
           <TableBody>
             {attendanceDetails.map((row) => (
-              <TableRow key={row.wd_id}>
+              <TableRow key={row.wd_id} 
+              sx={{
+                "& > *": { borderBottom: "unset" },
+                "&:hover": {
+                  backgroundColor: "#e3f2fd", // Set your desired hover color
+                },
+              }}
+            >
                 <TableCell component="th" scope="row">
                   {dateConvertions(row.wd_date)}
                 </TableCell>

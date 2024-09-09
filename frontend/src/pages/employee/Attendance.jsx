@@ -6,14 +6,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../Navbar";
 import Avatar from "@mui/material/Avatar";
-import AttendanceTable from "./AttendanceTable";
 import SearchIcon from "@mui/icons-material/Search";
 import AttendanceApprovalTable from "../admin/AttendanceApprovalTable";
 
 function Attendance() {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const handleDateChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "startDate") {
+ 
+      setStartDate(value);
+    } else if (name === "endDate") {
+
+      setEndDate(value);
+    }
+  };
+
   return (
     <div className="flex justify-center items-end bg-[#fafafc] min-w-full min-h-screen h-auto">
       <Navbar />
@@ -68,19 +81,27 @@ function Attendance() {
                 <h1 className="mr-2">Start date</h1>
                 <TextField
                   type="date"
+                  name="startDate"
+                  value={startDate}
+                  onChange={handleDateChange}
                   sx={{ backgroundColor: "transparent" }}
                 />
                 <h1 className="mr-2">End date</h1>
                 <TextField
                   type="date"
+                  name="endDate"
+                  value={endDate}
+                  onChange={handleDateChange}
                   sx={{ backgroundColor: "transparent" }}
                 />
               </div>
               {/* Row 3 */}
               <div className="col-span-12 flex justify-center">
-                <Paper elevation={5} sx={{borderRadius:5}}>
-                  {/* <AttendanceTable /> */}
-                  <AttendanceApprovalTable/>
+                <Paper elevation={5} sx={{borderRadius:5 ,minWidth:"1000px",borderRadius:3}}>
+                  <AttendanceApprovalTable
+                    startDate={startDate}
+                    endDate={endDate}
+                  />
                 </Paper>
               </div>
               <div className="col-span-4"></div>

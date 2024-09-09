@@ -21,7 +21,7 @@ import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import DoneAllIcon from "@mui/icons-material/DoneAll"; // Success
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"; // Pending
 import CancelIcon from "@mui/icons-material/Cancel"; // Rejected
-
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 function groupByDateAndUser(data) {
   return data.reduce((acc, item) => {
     const date = item.wd_date.split("T")[0]; // Extract the date part (YYYY-MM-DD)
@@ -44,7 +44,7 @@ function getMainRowData(rows) {
   const mainRow = rows[0];
   return {
     wda_time: mainRow.wda_time || "N/A",
-    u_fname: mainRow.u_fname || "N/A",
+    u_fname: [mainRow.u_fname, mainRow.u_lname] || "N/A",
     wda_approval_status:
       mainRow.wda_approval_status === 1 ? (
         <DoneAllIcon color="success" /> // Green icon for approved status
@@ -56,7 +56,7 @@ function getMainRowData(rows) {
         "Unknown Status"
       ),
     wd_requesting_user_id: mainRow.wd_requesting_user_id || "N/A",
-    wd_date: mainRow.wd_date || "N/A"
+    wd_date: dateTimeConvertions2(mainRow.wd_date) || "N/A",
   };
 }
 
@@ -88,26 +88,52 @@ const dateConvertions = (date) => {
     day: "2-digit",
   });
 
-  const [month, day, year] = sriLankaDateString.split('/');
+  const [month, day, year] = sriLankaDateString.split("/");
   return `${year}-${month}-${day}`;
+};
+const dateTimeConvertions2 = (datetime) => {
+  console.log("This is ht ed", datetime);
+  const options = {
+    timeZone: "Asia/Colombo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+
+  const sriLankaDateTimeString = new Date(datetime).toLocaleString(
+    "en-US",
+    options
+  );
+
+  const [date, time] = sriLankaDateTimeString.split(", ");
+  const [month, day, year] = date.split("/");
+  const formattedDateTime = `${year}-${month}-${day} ${time}`; // Removed 'T'
+
+  return formattedDateTime;
 };
 
 function Row(props) {
   const { date, userId, rows, onStatusChange } = props;
   const [open, setOpen] = React.useState(false);
-  
+
   const mainRowData = getMainRowData(rows);
 
   const handleBtn = async (status) => {
-  
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/thunder/attendance/approve`, {
-        approvedUserId: localStorage.getItem("userId"),
-        approvedTime: dateTimeConvertions(),
-        approvalStatus: status,
-        requestingUserId: mainRowData.wd_requesting_user_id,
-        date: dateConvertions(mainRowData.wd_date)
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/thunder/attendance/approve`,
+        {
+          approvedUserId: localStorage.getItem("userId"),
+          approvedTime: dateTimeConvertions(),
+          approvalStatus: status,
+          requestingUserId: mainRowData.wd_requesting_user_id,
+          date: dateConvertions(mainRowData.wd_date),
+        }
+      );
       onStatusChange(); // Notify parent to refresh data
     } catch (error) {
       console.error("Error updating approval status:", error);
@@ -120,7 +146,14 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow
+        sx={{
+          "& > *": { borderBottom: "unset" },
+          "&:hover": {
+            backgroundColor: "#e3f2fd", // Set your desired hover color
+          },
+        }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -134,7 +167,7 @@ function Row(props) {
           {date}
         </TableCell>
         <TableCell>{mainRowData.wda_time}</TableCell>
-        <TableCell>{userId}</TableCell>
+        <TableCell align="center">{userId}</TableCell>
         <TableCell>{mainRowData.u_fname}</TableCell>
         <TableCell>
           <Button onClick={() => handleBtn(1)}>
@@ -157,16 +190,20 @@ function Row(props) {
                 <TableHead>
                   <TableRow>
                     <TableCell>WD ID</TableCell>
-                    <TableCell>Start Time</TableCell>
-                    <TableCell>End Time</TableCell>
+                    <TableCell align="center">Start Time</TableCell>
+                    <TableCell align="center">End Time</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
                     <TableRow key={row.wd_id}>
                       <TableCell>{row.wd_id}</TableCell>
-                      <TableCell>{row.wd_start_time}</TableCell>
-                      <TableCell>{row.wd_end_time || "N/A"}</TableCell>
+                      <TableCell align="center">{row.wd_start_time}</TableCell>
+                      <TableCell align="center">
+                        {row.wd_end_time || (
+                          <FiberManualRecordIcon color="success" />
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -208,7 +245,9 @@ export default function AttendanceApprovalTable() {
     const fetchAttendanceDetails = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/thunder/attendance/getdetails/approval/${userId}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/thunder/attendance/getdetails/approval/${userId}`
         );
         console.log(response.data.data);
         setAttendaceApprovalDetails(response.data.data);
@@ -222,9 +261,7 @@ export default function AttendanceApprovalTable() {
 
     fetchAttendanceDetails();
   }, [toogle]);
-  useEffect(()=>{
-
-  },[toogle])
+  useEffect(() => {}, [toogle]);
 
   const handleStatusChange = () => {
     setToogle(!toogle); // Toggle the state to trigger data re-fetch
@@ -236,7 +273,7 @@ export default function AttendanceApprovalTable() {
   const groupedData = groupByDateAndUser(attendaceApprovalDetails);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -253,6 +290,12 @@ export default function AttendanceApprovalTable() {
           {Object.keys(groupedData).map((date) =>
             Object.keys(groupedData[date]).map((userId) => (
               <Row
+                sx={{
+                  "& > *": { borderBottom: "unset" },
+                  "&:hover": {
+                    backgroundColor: "#ff0000", // Set your desired hover color
+                  },
+                }}
                 key={`${date}-${userId}`}
                 date={date}
                 userId={parseInt(userId, 10)}
