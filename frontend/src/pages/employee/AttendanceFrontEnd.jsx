@@ -11,6 +11,7 @@ import Navbar from "../../Navbar";
 import axios from "axios";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 function AttendanceFrontEnd() {
   const userId = localStorage.getItem("userId");
@@ -161,7 +162,7 @@ function AttendanceFrontEnd() {
         <Navbar />
         <Box sx={{ display: "flex" }}>
           <Typography variant="h6">
-            <strong>Employee attendance view</strong>
+            <strong>Employee attendance view - {localStorage.getItem("userName")}</strong>
           </Typography>
           <Box flexGrow={1} />
           <Typography variant="h6">Token number: {sessionToken}</Typography>

@@ -2,6 +2,7 @@ import {
   getAttendaceApprovalDetails,
   getUserInOutDetails,
   getUserlatestOutDetails,
+  setApprovalDetails,
   setAttendanceInDetails,
   setAttendanceOutDetails,
 } from "./database.js";
@@ -83,6 +84,18 @@ export const getAttendaceApprovalDetailsService = async (userId) => {
     };
   }
 };
+export const setApprovalDetailsService = async (data)=>{
+  try{
+    const response = await setApprovalDetails(data)
+  }catch(error){
+    console.error(
+      "setApprovalDetailsService error occured in thnderService"
+    );
+    throw {
+      message: "setApprovalDetailsService error occured in thnderService",
+    };
+  }
+}
 
 export const getUserLatestOutDetailsService = async (userId) => {
   try {

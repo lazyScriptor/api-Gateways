@@ -3,6 +3,7 @@ import {
   getAttendaceApprovalDetailsService,
   getUserInOutDetailsService,
   getUserLatestOutDetailsService,
+  setApprovalDetailsService,
   setAttendanceInDetailsService,
   setAttendanceOutDetailsService,
 } from "./thunderService.js";
@@ -46,6 +47,12 @@ app.get("/attendance/getdetails/approval/:userId", async (req, res) => {
   const response = await getAttendaceApprovalDetailsService(req.params.userId);
   res.send(response);
 });
+app.post("/attendance/approve",async (req,res)=>{
+
+  const response = await setApprovalDetailsService(req.body);
+
+
+})
 app.listen(PORT, () => {
   console.log("Thunder API server started at port ", PORT);
 });

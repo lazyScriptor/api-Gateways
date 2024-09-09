@@ -87,3 +87,28 @@ WHERE work_duration.wd_requesting_user_id != ?;
     throw error;
   }
 };
+
+export const setApprovalDetails = async (data) => {
+  const {approvalStatus,approvedUserId,approvedTime,date,requestingUserId}=data
+  try {
+    console.log(data);
+    const [response] = await pool.query(
+      `
+      INSERT INTO work_duration_approval (wda_approved_user_id,wda_time,wda_approval_status) VALUES (?,?,?)
+      `,
+      [data.approvedUserId, data.approvedTime, data.approvalStatus]
+    );
+    const insertId = response.insertId;
+    const response2 = await pool.query(
+      `
+      UPDATE work_duration
+      SET wd_wda_id = ?
+      WHERE wd_requesting_user_id = ? AND wd_date =? 
+      `,
+      [insertId, requestingUserId,date]
+    );
+  } catch (error) {
+    console.error("Error in setApprovalDetails database.js");
+    throw error;
+  }
+};
