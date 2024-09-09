@@ -11,6 +11,7 @@ import Navbar from "../../Navbar";
 import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
 import SearchIcon from "@mui/icons-material/Search";
+import AttendanceApprovalTable from "../admin/AttendanceApprovalTable";
 
 function Attendance() {
   return (
@@ -78,7 +79,8 @@ function Attendance() {
               {/* Row 3 */}
               <div className="col-span-12 flex justify-center">
                 <Paper elevation={5} sx={{borderRadius:5}}>
-                  <AttendanceTable />
+                  {/* <AttendanceTable /> */}
+                  <AttendanceApprovalTable/>
                 </Paper>
               </div>
               <div className="col-span-4"></div>

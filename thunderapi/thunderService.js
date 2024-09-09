@@ -1,4 +1,5 @@
 import {
+  getAttendaceApprovalDetails,
   getUserInOutDetails,
   getUserlatestOutDetails,
   setAttendanceInDetails,
@@ -43,6 +44,28 @@ export const setAttendanceOutDetailsService = async (body) => {
 export const getUserInOutDetailsService = async (userId) => {
   try {
     const response = await getUserInOutDetails(userId);
+
+    return {
+      data: response,
+      status: true,
+      message: "Successfully fetched",
+    };
+  } catch (error) {
+    console.error(
+      "Get user inout detail service error occured in thnderService"
+    );
+    throw {
+      data: null,
+      message: "Get user inout detail service error occured in thnderService",
+      status: false,
+    };
+  }
+};
+
+
+export const getAttendaceApprovalDetailsService = async (userId) => {
+  try {
+    const response = await getAttendaceApprovalDetails(userId);
 
     return {
       data: response,

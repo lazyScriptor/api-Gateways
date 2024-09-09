@@ -52,16 +52,32 @@ export const getUserInOutDetails = async (userId) => {
     throw error;
   }
 };
-const dateConvertions = (date) => {
-  const currentDate = new Date();
-  const currentDateString = currentDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
-  return currentDateString;
-};
 export const getUserlatestOutDetails = async (userId) => {
   try {
     const [response] = await pool.query(
       `
       SELECT * FROM work_duration WHERE wd_requesting_user_id = ? AND wd_end_time is NULL 
+    `,
+      [userId]
+    );
+    return response;
+  } catch (error) {
+    console.error("Error in getUserlatestOutDetails database.js");
+    throw error;
+  }
+};
+export const getAttendaceApprovalDetails = async (userId) => {
+  try {
+    const [response] = await pool.query(
+      `
+ SELECT * 
+FROM work_duration 
+LEFT JOIN work_duration_approval 
+ON work_duration.wd_wda_id = work_duration_approval.wda_id 
+LEFT JOIN user
+ON user.u_id=work_duration_approval.wda_approved_user_id
+WHERE work_duration.wd_requesting_user_id != ?;
+
     `,
       [userId]
     );

@@ -45,17 +45,45 @@ function AttendanceFrontEnd() {
   const [outBtnStatus, setOutBtnStatus] = useState(true);
   const [sessionToken, setSessionToken] = useState("");
 
-  const dateConvertions = (date) => {
+  const dateConvertions = () => {
     const currentDate = new Date();
-    const currentDateString = currentDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
-    return currentDateString;
+    // Convert the current date to Sri Lanka's time zone (Asia/Colombo)
+    const sriLankaDateString = currentDate.toLocaleString("en-US", {
+      timeZone: "Asia/Colombo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  
+    // Format the date string as 'YYYY-MM-DD'
+    const [month, day, year] = sriLankaDateString.split('/');
+    return `${year}-${month}-${day}`;
   };
-  const dateTimeConvertions = (dateTime) => {
+  const dateTimeConvertions = () => {
     const currentDateTime = new Date();
-    const currentDateTimeString = currentDateTime.toISOString(); // 'YYYY-MM-DDTHH:MM:SSZ'
-    return currentDateTimeString;
+  
+    // Convert the current date and time to Sri Lanka's time zone (Asia/Colombo)
+    const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
+      timeZone: "Asia/Colombo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // Use 24-hour format
+    });
+  
+    // Format the date and time string as 'YYYY-MM-DDTHH:MM:SS'
+    const [date, time] = sriLankaDateTimeString.split(', ');
+    const [month, day, year] = date.split('/');
+    const formattedDateTime = `${year}-${month}-${day}T${time}`;
+  
+    return formattedDateTime;
   };
-
+  
+  console.log(dateTimeConvertions());
+  
   const handleClickIn = async () => {
     setInBtnStatus(true); // Set button status to loading or disabled
     setOutBtnStatus(false);

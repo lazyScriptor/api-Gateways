@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getAttendaceApprovalDetailsService,
   getUserInOutDetailsService,
   getUserLatestOutDetailsService,
   setAttendanceInDetailsService,
@@ -41,7 +42,10 @@ app.get("/attendance/getdetails/:userId", async (req, res) => {
   const response = await getUserInOutDetailsService(req.params.userId);
   res.send(response);
 });
-
+app.get("/attendance/getdetails/approval/:userId", async (req, res) => {
+  const response = await getAttendaceApprovalDetailsService(req.params.userId);
+  res.send(response);
+});
 app.listen(PORT, () => {
   console.log("Thunder API server started at port ", PORT);
 });
