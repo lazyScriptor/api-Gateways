@@ -41,7 +41,6 @@ function groupByDateAndUser(data) {
 }
 
 function getMainRowData(rows) {
-  // Assuming that the first entry in the rows array contains the necessary main row information
   const mainRow = rows[0];
   return {
     wda_time: mainRow.wda_time || "N/A",
@@ -63,8 +62,6 @@ function getMainRowData(rows) {
 
 const dateTimeConvertions = () => {
   const currentDateTime = new Date();
-
-  // Convert the current date and time to Sri Lanka's time zone (Asia/Colombo)
   const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
     timeZone: "Asia/Colombo",
     year: "numeric",
@@ -73,10 +70,9 @@ const dateTimeConvertions = () => {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false, // Use 24-hour format
+    hour12: false,
   });
 
-  // Format the date and time string as 'YYYY-MM-DDTHH:MM:SS'
   const [date, time] = sriLankaDateTimeString.split(", ");
   const [month, day, year] = date.split("/");
   const formattedDateTime = `${year}-${month}-${day}T${time}`;
@@ -85,7 +81,6 @@ const dateTimeConvertions = () => {
 };
 
 const dateConvertions = (date) => {
-  // Convert the provided date to Sri Lanka's time zone (Asia/Colombo)
   const sriLankaDateString = new Date(date).toLocaleString("en-US", {
     timeZone: "Asia/Colombo",
     year: "numeric",
@@ -93,25 +88,30 @@ const dateConvertions = (date) => {
     day: "2-digit",
   });
 
-  // Format the date string as 'YYYY-MM-DD'
   const [month, day, year] = sriLankaDateString.split('/');
   return `${year}-${month}-${day}`;
 };
 
 function Row(props) {
-  const { date, userId, rows } = props;
+  const { date, userId, rows, onStatusChange } = props;
   const [open, setOpen] = React.useState(false);
   
   const mainRowData = getMainRowData(rows);
 
-  const handleBtn = (status) => {
-    axios.post(`${import.meta.env.VITE_API_URL}/thunder/attendance/approve`, {
-      approvedUserId: localStorage.getItem("userId"),
-      approvedTime: dateTimeConvertions(),
-      approvalStatus: status,
-      requestingUserId: mainRowData.wd_requesting_user_id,
-      date: dateConvertions(mainRowData.wd_date) // Pass the formatted date
-    });
+  const handleBtn = async (status) => {
+  
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/thunder/attendance/approve`, {
+        approvedUserId: localStorage.getItem("userId"),
+        approvedTime: dateTimeConvertions(),
+        approvalStatus: status,
+        requestingUserId: mainRowData.wd_requesting_user_id,
+        date: dateConvertions(mainRowData.wd_date)
+      });
+      onStatusChange(); // Notify parent to refresh data
+    } catch (error) {
+      console.error("Error updating approval status:", error);
+    }
   };
 
   const handleRejectBtn = () => {
@@ -187,17 +187,18 @@ Row.propTypes = {
       wd_id: PropTypes.number.isRequired,
       wd_start_time: PropTypes.string.isRequired,
       wd_end_time: PropTypes.string,
-      wda_time: PropTypes.string, // Field for approval time
-      u_fname: PropTypes.string, // Field for approved user's first name
-      wda_approval_status: PropTypes.number, // Field for approval status
-      wd_requesting_user_id: PropTypes.number.isRequired, // Field for requesting user's ID
-      wd_date: PropTypes.string.isRequired, // Field for date
+      wda_time: PropTypes.string,
+      u_fname: PropTypes.string,
+      wda_approval_status: PropTypes.number,
+      wd_requesting_user_id: PropTypes.number.isRequired,
+      wd_date: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onStatusChange: PropTypes.func.isRequired, // Add onStatusChange prop
 };
 
 export default function AttendanceApprovalTable() {
-  const [toogle,setToogle]=useState(false);
+  const [toogle, setToogle] = useState(false);
   const [attendaceApprovalDetails, setAttendaceApprovalDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -221,11 +222,17 @@ export default function AttendanceApprovalTable() {
 
     fetchAttendanceDetails();
   }, [toogle]);
+  useEffect(()=>{
+
+  },[toogle])
+
+  const handleStatusChange = () => {
+    setToogle(!toogle); // Toggle the state to trigger data re-fetch
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
-  // Group the attendance data by date and requesting user ID
   const groupedData = groupByDateAndUser(attendaceApprovalDetails);
 
   return (
@@ -245,7 +252,13 @@ export default function AttendanceApprovalTable() {
         <TableBody>
           {Object.keys(groupedData).map((date) =>
             Object.keys(groupedData[date]).map((userId) => (
-              <Row key={`${date}-${userId}`} date={date} userId={parseInt(userId, 10)} rows={groupedData[date][userId]} />
+              <Row
+                key={`${date}-${userId}`}
+                date={date}
+                userId={parseInt(userId, 10)}
+                rows={groupedData[date][userId]}
+                onStatusChange={handleStatusChange} // Pass the function as prop
+              />
             ))
           )}
         </TableBody>
