@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 function Hero() {
   const navigateTo=useNavigate();
   const onButtonClick = () => {
-    navigateTo('/attendance')
+    navigateTo('/attendance-fe')
   };
   return (
     <div className="mt-[-96px] flex flex-col items-center">

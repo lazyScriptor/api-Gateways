@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PiArticle } from "react-icons/pi";
 import { IoIosClose } from "react-icons/io";
 import { Navigate, useNavigate } from "react-router-dom";
 import sltDigital from "./assets/slt-digital.png";
 
 function Navbar() {
+  const userType = localStorage.getItem("userType");
+
   const navigate = useNavigate();
   const [nav, setNav] = useState(false);
 
@@ -26,11 +28,13 @@ function Navbar() {
                 Home
               </button>
             </li>
-            <li className="p-4" onClick={() => [navigate("/attendance")]}>
-              <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
-                Attendance
-              </button>
-            </li>
+            {userType == "admin" && (
+              <li className="p-4" onClick={() => [navigate("/attendance")]}>
+                <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
+                  Attendance
+                </button>
+              </li>
+            )}
             <li className="p-4" onClick={() => [navigate("/shifts")]}>
               <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
                 Shifts
@@ -38,11 +42,11 @@ function Navbar() {
             </li>
             <li className="p-4" onClick={() => [navigate("/attendance-fe")]}>
               <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
-                AT New
+                Attendance
               </button>
             </li>
             <li className="p-4" onClick={() => [navigate("/tailwind")]}>
-              <button className="hover:text-lg hover:text-red-400 transition-all duration-300">
+              <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
                 Tailwind
               </button>
             </li>
@@ -67,11 +71,12 @@ function Navbar() {
       </div>
 
       {nav && (
-        <div className="fixed left-0 top-0 min-w-[80%] bg-black h-screen bg-opacity-90 backdrop-blur-sm z-10">
+        <div className="fixed left-0 top-0 min-w-[80%] bg-white h-screen bg-opacity-90 backdrop-blur-lg z-10">
           <ul className=" uppercase">
             <li>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center bg-[#007bf3]">
                 <img
+                
                   className="w-28 pl-4"
                   src={sltDigital}
                   alt="SLT-digital logo"

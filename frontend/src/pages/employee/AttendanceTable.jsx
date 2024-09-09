@@ -67,7 +67,6 @@ export default function AttendanceTable({ inBtnStatus, outBtnStatus }) {
             {attendanceDetails.map((row) => (
               <TableRow key={row.wd_id} 
               sx={{
-                "& > *": { borderBottom: "unset" },
                 "&:hover": {
                   backgroundColor: "#e3f2fd", // Set your desired hover color
                 },

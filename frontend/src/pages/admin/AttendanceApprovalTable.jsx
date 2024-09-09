@@ -39,12 +39,25 @@ function groupByDateAndUser(data) {
     return acc;
   }, {});
 }
+const dateTimeConvertions2 = (datetime) => {
+  const dateObj = new Date(datetime);
+
+  const year = dateObj.getFullYear();
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const hours = String(dateObj.getHours()).padStart(2, "0");
+  const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+  const seconds = String(dateObj.getSeconds()).padStart(2, "0");
+
+  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  return formattedDateTime;
+};
 
 function getMainRowData(rows) {
   const mainRow = rows[0];
   return {
     wda_time: mainRow.wda_time || "N/A",
-    u_fname: [mainRow.u_fname, mainRow.u_lname] || "N/A",
+    u_fname: [mainRow.u_fname," ", mainRow.u_lname] || "N/A",
     wda_approval_status:
       mainRow.wda_approval_status === 1 ? (
         <DoneAllIcon color="success" /> // Green icon for approved status
@@ -90,30 +103,6 @@ const dateConvertions = (date) => {
 
   const [month, day, year] = sriLankaDateString.split("/");
   return `${year}-${month}-${day}`;
-};
-const dateTimeConvertions2 = (datetime) => {
-  console.log("This is ht ed", datetime);
-  const options = {
-    timeZone: "Asia/Colombo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  };
-
-  const sriLankaDateTimeString = new Date(datetime).toLocaleString(
-    "en-US",
-    options
-  );
-
-  const [date, time] = sriLankaDateTimeString.split(", ");
-  const [month, day, year] = date.split("/");
-  const formattedDateTime = `${year}-${month}-${day} ${time}`; // Removed 'T'
-
-  return formattedDateTime;
 };
 
 function Row(props) {
@@ -177,7 +166,7 @@ function Row(props) {
             <ThumbDownAltIcon />
           </Button>
         </TableCell>
-        <TableCell>{mainRowData.wda_approval_status}</TableCell>
+        <TableCell align="center">{mainRowData.wda_approval_status}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -273,8 +262,20 @@ export default function AttendanceApprovalTable() {
   const groupedData = groupByDateAndUser(attendaceApprovalDetails);
 
   return (
-    <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
-      <Table aria-label="collapsible table">
+    <TableContainer
+      component={Paper}
+      sx={{
+        borderRadius:3,
+        maxHeight: 440,
+        overflowY: "auto",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
+        scrollbarWidth: "none", // For Firefox
+        msOverflowStyle: "none", // For Internet Explorer and Edge
+      }}
+    >
+      <Table stickyHeader aria-label="attendance approval table">
         <TableHead>
           <TableRow>
             <TableCell />
