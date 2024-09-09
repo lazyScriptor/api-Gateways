@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
 import NavBarEmployee from "./NavBarEmployee";
 import { styled } from "@mui/material/styles";
@@ -11,9 +11,36 @@ import Navbar from "../../Navbar";
 import axios from "axios";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-const userId = localStorage.getItem("userId");
 
 function AttendanceFrontEnd() {
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const fetchOutBtnStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/thunder/attendance/out/latest/${userId}`
+        );
+        if (
+          () => {
+            response.data.data[0].wd_date === dateConvertions(new Date());
+            return true;
+          }
+        ) {
+          setSessionToken(response.data.data[0].wd_id);
+          setOutBtnStatus(false);
+          setInBtnStatus(true);
+        }
+      } catch (error) {
+        console.error("Error fetching out button status:", error);
+      }
+    };
+
+    fetchOutBtnStatus();
+  }, [userId]);
+
   const [inBtnStatus, setInBtnStatus] = useState(false);
   const [outBtnStatus, setOutBtnStatus] = useState(true);
   const [sessionToken, setSessionToken] = useState("");
@@ -88,7 +115,6 @@ function AttendanceFrontEnd() {
         height: "auto",
       }}
     >
-
       <Box
         component={Paper}
         elevation={10}
@@ -100,11 +126,11 @@ function AttendanceFrontEnd() {
           minHeight: "85vh",
           height: "auto",
           mb: 1,
-          mt:10,
+          mt: 10,
           borderRadius: 2,
         }}
       >
-        <Navbar /> 
+        <Navbar />
         <Box sx={{ display: "flex" }}>
           <Typography variant="h6">
             <strong>Employee attendance view</strong>
@@ -122,9 +148,13 @@ function AttendanceFrontEnd() {
               </Typography>
               <Divider sx={{ m: 2 }} />
               <Box sx={{ width: "100%", height: "50px" }}>
-                <Typography variant="caption">Today : {dateConvertions()}</Typography>
+                <Typography variant="caption">
+                  Today : {dateConvertions()}
+                </Typography>
                 <br />
-                <Typography variant="caption">Total worked time for today {}</Typography>
+                <Typography variant="caption">
+                  Total worked time for today {}
+                </Typography>
               </Box>
               <Box
                 sx={{

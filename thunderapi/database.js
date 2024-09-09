@@ -6,6 +6,7 @@ const pool = mysql.createPool({
   user: "root",
   password: "",
   database: "employee_attendance_db",
+  connectionLimit: 10,
 });
 
 export const setAttendanceInDetails = async (body) => {
@@ -48,6 +49,25 @@ export const getUserInOutDetails = async (userId) => {
     return response;
   } catch (error) {
     console.error("Error in getUserDetails:", error);
+    throw error;
+  }
+};
+const dateConvertions = (date) => {
+  const currentDate = new Date();
+  const currentDateString = currentDate.toISOString().split("T")[0]; // 'YYYY-MM-DD'
+  return currentDateString;
+};
+export const getUserlatestOutDetails = async (userId) => {
+  try {
+    const [response] = await pool.query(
+      `
+      SELECT * FROM work_duration WHERE wd_requesting_user_id = ? AND wd_end_time is NULL 
+    `,
+      [userId]
+    );
+    return response;
+  } catch (error) {
+    console.error("Error in getUserlatestOutDetails database.js");
     throw error;
   }
 };

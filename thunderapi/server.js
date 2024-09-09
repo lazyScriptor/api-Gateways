@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUserInOutDetailsService,
+  getUserLatestOutDetailsService,
   setAttendanceInDetailsService,
   setAttendanceOutDetailsService,
 } from "./thunderService.js";
@@ -25,11 +26,22 @@ app.post("/attendance/out", async (req, res) => {
   const response = await setAttendanceOutDetailsService(req.body);
   res.send(response);
 });
-app.get("/attendance/getdetails/:userId", async (req, res) => {
-  const response = await getUserInOutDetailsService(req.params.userId);
+
+
+
+app.get("/attendance/out/latest/:userId", async (req, res) => {
+  const response = await getUserLatestOutDetailsService(req.params.userId);
   console.log("resposne",response)
   res.send(response);
 });
+
+
+
+app.get("/attendance/getdetails/:userId", async (req, res) => {
+  const response = await getUserInOutDetailsService(req.params.userId);
+  res.send(response);
+});
+
 app.listen(PORT, () => {
   console.log("Thunder API server started at port ", PORT);
 });

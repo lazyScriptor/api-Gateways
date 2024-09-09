@@ -1,4 +1,9 @@
-import { getUserInOutDetails, setAttendanceInDetails, setAttendanceOutDetails } from "./database.js";
+import {
+  getUserInOutDetails,
+  getUserlatestOutDetails,
+  setAttendanceInDetails,
+  setAttendanceOutDetails,
+} from "./database.js";
 
 export const setAttendanceInDetailsService = async (body) => {
   try {
@@ -38,7 +43,7 @@ export const setAttendanceOutDetailsService = async (body) => {
 export const getUserInOutDetailsService = async (userId) => {
   try {
     const response = await getUserInOutDetails(userId);
-   
+
     return {
       data: response,
       status: true,
@@ -51,6 +56,28 @@ export const getUserInOutDetailsService = async (userId) => {
     throw {
       data: null,
       message: "Get user inout detail service error occured in thnderService",
+      status: false,
+    };
+  }
+};
+
+export const getUserLatestOutDetailsService = async (userId) => {
+  try {
+    const response = await getUserlatestOutDetails(userId);
+
+    return {
+      data: response,
+      status: true,
+      message: "Successfully fetched",
+    };
+  } catch (error) {
+    console.error(
+      "Get user latest out details service error occured in thnderService"
+    );
+    throw {
+      data:null,
+      message:
+        "Get user latest out details service error occured in thnderService",
       status: false,
     };
   }
