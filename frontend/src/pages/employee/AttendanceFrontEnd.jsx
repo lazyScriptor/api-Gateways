@@ -12,7 +12,33 @@ import axios from "axios";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-
+function getSriLankaDateTime(dateString) {
+  const date = new Date(dateString);
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "Asia/Colombo",
+    hour12: false,
+  };
+  const datePart = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Colombo",
+  }).format(date);
+  const timePart = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZone: "Asia/Colombo",
+    hour12: false,
+  }).format(date);
+  return `${datePart} ${timePart}`;
+}
 function AttendanceFrontEnd() {
   const userId = localStorage.getItem("userId");
 
@@ -63,41 +89,41 @@ function AttendanceFrontEnd() {
   const dateTimeConvertions = () => {
     const currentDateTime = new Date();
   
-    // Convert the current date and time to Sri Lanka's time zone (Asia/Colombo)
-    const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
-      timeZone: "Asia/Colombo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false, // Use 24-hour format
-    });
+    // // Convert the current date and time to Sri Lanka's time zone (Asia/Colombo)
+    // const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
+    //   timeZone: "Asia/Colombo",
+    //   year: "numeric",
+    //   month: "2-digit",
+    //   day: "2-digit",
+    //   hour: "2-digit",
+    //   minute: "2-digit",
+    //   second: "2-digit",
+    //   hour12: false, // Use 24-hour format
+    // });
   
-    // Format the date and time string as 'YYYY-MM-DDTHH:MM:SS'
-    const [date, time] = sriLankaDateTimeString.split(', ');
-    const [month, day, year] = date.split('/');
-    const formattedDateTime = `${year}-${month}-${day}T${time}`;
+    // // Format the date and time string as 'YYYY-MM-DDTHH:MM:SS'
+    // const [date, time] = sriLankaDateTimeString.split(', ');
+    // const [month, day, year] = date.split('/');
+    // const formattedDateTime = `${year}-${month}-${day}T${time}`;
   
-    return formattedDateTime;
+    return currentDateTime;
   };
-  
-  console.log(dateTimeConvertions());
+
   
   const handleClickIn = async () => {
     setInBtnStatus(true); // Set button status to loading or disabled
     setOutBtnStatus(false);
     try {
-      console.log(dateTimeConvertions());
+      console.log("dasdqawduaid")
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/thunder/attendance/in`,
         {
           userId: userId,
-          date: dateConvertions(),
-          startTime: dateTimeConvertions(),
+          date: new Date(),
+          startTime: new Date(),
         }
       );
+      console.log("dataaaaaaa",data)
       setSessionToken(data.insertId);
       localStorage.setItem("sessionToken", data.insertId);
 
@@ -120,7 +146,7 @@ function AttendanceFrontEnd() {
         {
           userId: userId,
           sessionToken: sessionToken,
-          endTime: dateTimeConvertions(),
+          endTime: new Date(),
         }
       );
 

@@ -22,6 +22,7 @@ app.get("/thunderapi2", (req, res) => {
 });
 app.post("/attendance/in", async (req, res) => {
   const response = await setAttendanceInDetailsService(req.body);
+
   res.send(response);
 });
 app.post("/attendance/out", async (req, res) => {
@@ -33,7 +34,7 @@ app.post("/attendance/out", async (req, res) => {
 
 app.get("/attendance/out/latest/:userId", async (req, res) => {
   const response = await getUserLatestOutDetailsService(req.params.userId);
-  console.log("resposne",response)
+ 
   res.send(response);
 });
 
@@ -48,10 +49,7 @@ app.get("/attendance/getdetails/approval/:userId", async (req, res) => {
   res.send(response);
 });
 app.post("/attendance/approve",async (req,res)=>{
-
   const response = await setApprovalDetailsService(req.body);
-
-
 })
 app.listen(PORT, () => {
   console.log("Thunder API server started at port ", PORT);

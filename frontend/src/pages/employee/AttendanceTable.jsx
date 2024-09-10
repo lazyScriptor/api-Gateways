@@ -24,7 +24,6 @@ export default function AttendanceTable({ inBtnStatus, outBtnStatus }) {
             import.meta.env.VITE_API_URL
           }/thunder/attendance/getdetails/${userId}`
         );
-        console.log(response.data.data);
         setAttendanceDetails(response.data.data);
       } catch (err) {
         console.error("Error fetching attendance details:", err);
@@ -57,10 +56,10 @@ export default function AttendanceTable({ inBtnStatus, outBtnStatus }) {
         <Table sx={{ minWidth: 500 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="right">Start Time</TableCell>
-              <TableCell align="right">End Time</TableCell>
-              <TableCell align="right">Duration</TableCell>
+              <TableCell align="center"  sx={{fontWeight:"bold"}}>Date</TableCell>
+              <TableCell  sx={{fontWeight:"bold"}} align="center">Start Time</TableCell>
+              <TableCell  sx={{fontWeight:"bold"}} align="center">End Time</TableCell>
+              <TableCell  sx={{fontWeight:"bold"}} align="center">Duration</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -72,12 +71,12 @@ export default function AttendanceTable({ inBtnStatus, outBtnStatus }) {
                 },
               }}
             >
-                <TableCell component="th" scope="row">
+                <TableCell align="center"  component="th" scope="row">
                   {dateConvertions(row.wd_date)}
                 </TableCell>
-                <TableCell align="right">{row.wd_start_time}</TableCell>
-                <TableCell align="right">{row.wd_end_time}</TableCell>
-                <TableCell align="right">{row.wd_duration}</TableCell>
+                <TableCell align="center">{row.wd_start_time}</TableCell>
+                <TableCell align="center">{row.wd_end_time}</TableCell>
+                <TableCell align="center">{row.wd_duration}</TableCell>
               </TableRow>
             ))}
           </TableBody>

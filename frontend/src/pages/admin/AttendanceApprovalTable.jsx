@@ -22,6 +22,8 @@ import DoneAllIcon from "@mui/icons-material/DoneAll"; // Success
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"; // Pending
 import CancelIcon from "@mui/icons-material/Cancel"; // Rejected
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+
+// Group by date and userId
 function groupByDateAndUser(data) {
   return data.reduce((acc, item) => {
     const date = item.wd_date.split("T")[0]; // Extract the date part (YYYY-MM-DD)
@@ -39,71 +41,30 @@ function groupByDateAndUser(data) {
     return acc;
   }, {});
 }
-const dateTimeConvertions2 = (datetime) => {
-  const dateObj = new Date(datetime);
 
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  const hours = String(dateObj.getHours()).padStart(2, "0");
-  const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-  const seconds = String(dateObj.getSeconds()).padStart(2, "0");
-
-  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  return formattedDateTime;
-};
-
+// Extract main row data for display
 function getMainRowData(rows) {
   const mainRow = rows[0];
   return {
-    wda_time: mainRow.wda_time || "N/A",
-    u_fname: [mainRow.u_fname," ", mainRow.u_lname] || "N/A",
+    wda_time: mainRow.wda_time || "N/A", // Handle null or undefined wda_time
+    u_fname:
+      mainRow.u_fname && mainRow.u_lname
+        ? `${mainRow.u_fname} ${mainRow.u_lname}`
+        : "N/A",
     wda_approval_status:
       mainRow.wda_approval_status === 1 ? (
-        <DoneAllIcon color="success" /> // Green icon for approved status
+        <DoneAllIcon color="success" />
       ) : mainRow.wda_approval_status === null ? (
-        <HourglassEmptyIcon color="action" /> // Grey icon for pending status
+        <HourglassEmptyIcon color="action" />
       ) : mainRow.wda_approval_status === 2 ? (
-        <CancelIcon color="error" /> // Red icon for rejected status
+        <CancelIcon color="error" />
       ) : (
         "Unknown Status"
       ),
     wd_requesting_user_id: mainRow.wd_requesting_user_id || "N/A",
-    wd_date: dateTimeConvertions2(mainRow.wd_date) || "N/A",
+    wd_date: mainRow.wd_date || "N/A",
   };
 }
-
-const dateTimeConvertions = () => {
-  const currentDateTime = new Date();
-  const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
-    timeZone: "Asia/Colombo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
-
-  const [date, time] = sriLankaDateTimeString.split(", ");
-  const [month, day, year] = date.split("/");
-  const formattedDateTime = `${year}-${month}-${day}T${time}`;
-
-  return formattedDateTime;
-};
-
-const dateConvertions = (date) => {
-  const sriLankaDateString = new Date(date).toLocaleString("en-US", {
-    timeZone: "Asia/Colombo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const [month, day, year] = sriLankaDateString.split("/");
-  return `${year}-${month}-${day}`;
-};
 
 function Row(props) {
   const { date, userId, rows, onStatusChange } = props;
@@ -117,10 +78,9 @@ function Row(props) {
         `${import.meta.env.VITE_API_URL}/thunder/attendance/approve`,
         {
           approvedUserId: localStorage.getItem("userId"),
-          approvedTime: dateTimeConvertions(),
           approvalStatus: status,
           requestingUserId: mainRowData.wd_requesting_user_id,
-          date: dateConvertions(mainRowData.wd_date),
+          date: new Date(),
         }
       );
       onStatusChange(); // Notify parent to refresh data
@@ -155,14 +115,21 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {date}
         </TableCell>
-        <TableCell>{mainRowData.wda_time}</TableCell>
+        <TableCell align="center">{mainRowData.wda_time}</TableCell>
         <TableCell align="center">{userId}</TableCell>
-        <TableCell>{mainRowData.u_fname}</TableCell>
-        <TableCell>
-          <Button onClick={() => handleBtn(1)}>
+        <TableCell align="center">{mainRowData.u_fname}</TableCell>
+        <TableCell align="center">
+          <Button
+            onClick={() => handleBtn(1)}
+            sx={{ minWidth: "10px", width: "35px" }}
+          >
             <ThumbUpAltIcon />
           </Button>
-          <Button color="error" onClick={handleRejectBtn}>
+          <Button
+            onClick={handleRejectBtn}
+            color="error"
+            sx={{ minWidth: "10px", width: "35px" }}
+          >
             <ThumbDownAltIcon />
           </Button>
         </TableCell>
@@ -220,7 +187,7 @@ Row.propTypes = {
       wd_date: PropTypes.string.isRequired,
     })
   ).isRequired,
-  onStatusChange: PropTypes.func.isRequired, // Add onStatusChange prop
+  onStatusChange: PropTypes.func.isRequired,
 };
 
 export default function AttendanceApprovalTable() {
@@ -238,7 +205,7 @@ export default function AttendanceApprovalTable() {
             import.meta.env.VITE_API_URL
           }/thunder/attendance/getdetails/approval/${userId}`
         );
-        console.log(response.data.data);
+        console.log(response.data);
         setAttendaceApprovalDetails(response.data.data);
       } catch (err) {
         console.error("Error fetching attendance details:", err);
@@ -250,7 +217,6 @@ export default function AttendanceApprovalTable() {
 
     fetchAttendanceDetails();
   }, [toogle]);
-  useEffect(() => {}, [toogle]);
 
   const handleStatusChange = () => {
     setToogle(!toogle); // Toggle the state to trigger data re-fetch
@@ -265,7 +231,7 @@ export default function AttendanceApprovalTable() {
     <TableContainer
       component={Paper}
       sx={{
-        borderRadius:3,
+        borderRadius: 3,
         maxHeight: 440,
         overflowY: "auto",
         "&::-webkit-scrollbar": {
@@ -279,29 +245,35 @@ export default function AttendanceApprovalTable() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Date</TableCell>
-            <TableCell>Approval Time</TableCell>
-            <TableCell>Requesting user id</TableCell>
-            <TableCell>Approved by</TableCell>
-            <TableCell align="center">Approve</TableCell>
-            <TableCell>Approval Status</TableCell>
+            <TableCell align="left" sx={{ fontWeight: "bold" }}>
+              Request date
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Approval Time
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              User ID
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              User Name
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Approval Action
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Status
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {Object.keys(groupedData).map((date) =>
             Object.keys(groupedData[date]).map((userId) => (
               <Row
-                sx={{
-                  "& > *": { borderBottom: "unset" },
-                  "&:hover": {
-                    backgroundColor: "#ff0000", // Set your desired hover color
-                  },
-                }}
                 key={`${date}-${userId}`}
                 date={date}
                 userId={parseInt(userId, 10)}
                 rows={groupedData[date][userId]}
-                onStatusChange={handleStatusChange} // Pass the function as prop
+                onStatusChange={handleStatusChange}
               />
             ))
           )}

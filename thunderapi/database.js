@@ -25,6 +25,7 @@ export const setAttendanceInDetails = async (body) => {
 };
 
 export const setAttendanceOutDetails = async (body) => {
+  console.log("database", body);
   try {
     const [results] = await pool.query(
       `
@@ -32,6 +33,7 @@ export const setAttendanceOutDetails = async (body) => {
       `,
       [body.endTime, body.userId, body.sessionToken]
     );
+    console.log(results);
     return results;
   } catch (error) {
     console.error("Error in setAttendanceOutDetails:", error);
@@ -81,6 +83,7 @@ WHERE work_duration.wd_requesting_user_id != ?;
     `,
       [userId]
     );
+    console.log(response)
     return response;
   } catch (error) {
     console.error("Error in getUserlatestOutDetails database.js");
@@ -89,23 +92,30 @@ WHERE work_duration.wd_requesting_user_id != ?;
 };
 
 export const setApprovalDetails = async (data) => {
-  const {approvalStatus,approvedUserId,approvedTime,date,requestingUserId}=data
+  const {
+    approvalStatus,
+    approvedUserId,
+    approvedTime,
+    date,
+    requestingUserId,
+  } = data;
   try {
-    console.log(data);
+    console.log(data.date);
     const [response] = await pool.query(
       `
       INSERT INTO work_duration_approval (wda_approved_user_id,wda_time,wda_approval_status) VALUES (?,?,?)
       `,
-      [data.approvedUserId, data.approvedTime, data.approvalStatus]
+      [data.approvedUserId, data.date, data.approvalStatus]
     );
     const insertId = response.insertId;
+    
     const response2 = await pool.query(
       `
       UPDATE work_duration
       SET wd_wda_id = ?
       WHERE wd_requesting_user_id = ? AND wd_date =? 
       `,
-      [insertId, requestingUserId,date]
+      [insertId, requestingUserId, data.dateOnly]
     );
   } catch (error) {
     console.error("Error in setApprovalDetails database.js");
