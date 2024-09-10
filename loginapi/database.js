@@ -5,6 +5,7 @@ const pool = mysql.createPool({
   user: "root",
   password: "",
   database: "employee_attendance_db2",
+  connectionLimit: 10,
 });
 
 export const getUsers = async (id) => {

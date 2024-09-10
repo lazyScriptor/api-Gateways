@@ -31,7 +31,7 @@ function Navbar() {
             {userType == "admin" && (
               <li className="p-4" onClick={() => [navigate("/attendance")]}>
                 <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
-                  Attendance
+                  Approvals
                 </button>
               </li>
             )}

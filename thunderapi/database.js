@@ -71,19 +71,19 @@ export const getAttendaceApprovalDetails = async (userId) => {
   try {
     const [response] = await pool.query(
       `
-SELECT 
-    work_duration.*, 
-    work_duration_approval.*, 
-    approving_user.u_fname AS approving_user_fname, 
+  SELECT
+    work_duration.*,
+    work_duration_approval.*,
+    approving_user.u_fname AS approving_user_fname,
     approving_user.u_lname AS approving_user_lname,
-    requesting_user.u_fname AS requesting_user_fname, 
+    requesting_user.u_fname AS requesting_user_fname,
     requesting_user.u_lname AS requesting_user_lname
-FROM work_duration 
-LEFT JOIN work_duration_approval 
+  FROM work_duration 
+  LEFT JOIN work_duration_approval 
     ON work_duration.wd_wda_id = work_duration_approval.wda_id 
-LEFT JOIN user AS approving_user
+  LEFT JOIN user AS approving_user
     ON approving_user.u_id = work_duration_approval.wda_approved_user_id
-LEFT JOIN user AS requesting_user
+  LEFT JOIN user AS requesting_user
     ON requesting_user.u_id = work_duration.wd_requesting_user_id
 
 

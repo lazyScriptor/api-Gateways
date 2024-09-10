@@ -57,7 +57,7 @@ function Attendance() {
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
                   <TextField
                     component={Paper}
-                    elevation="5"
+                    elevation="2"
                     size="small"
                     id="outlined-basic"
                     onChange={(e) => setEmployeeId(e.target.value)}
@@ -79,6 +79,8 @@ function Attendance() {
               <div className="col-span-8 flex gap-2 justify-end items-center">
                 <h1 className="mr-2">Start date</h1>
                 <TextField
+                  component={Paper}
+                  elevation={2}
                   type="date"
                   name="startDate"
                   value={startDate}
@@ -87,6 +89,8 @@ function Attendance() {
                 />
                 <h1 className="mr-2">End date</h1>
                 <TextField
+                  component={Paper}
+                  elevation={2}
                   type="date"
                   name="endDate"
                   value={endDate}
