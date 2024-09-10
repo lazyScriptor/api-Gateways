@@ -15,14 +15,13 @@ import AttendanceApprovalTable from "../admin/AttendanceApprovalTable";
 function Attendance() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [employeeId, setEmployeeId] = useState("");
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
     if (name === "startDate") {
- 
       setStartDate(value);
     } else if (name === "endDate") {
-
       setEndDate(value);
     }
   };
@@ -57,15 +56,15 @@ function Attendance() {
               <div className="col-span-8">
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
                   <TextField
+                    component={Paper}
+                    elevation="5"
                     size="small"
                     id="outlined-basic"
-                    label="Search employee"
+                    onChange={(e) => setEmployeeId(e.target.value)}
+                    label="Search by employee id"
                     variant="outlined"
-                    sx={{ width: "70%" }}
+                    sx={{ width: "200px" }}
                   />
-                  <Button>
-                    <SearchIcon />
-                  </Button>
                 </div>
               </div>
               <div className="col-span-4 flex justify-end">
@@ -97,8 +96,12 @@ function Attendance() {
               </div>
               {/* Row 3 */}
               <div className="col-span-12 flex justify-center">
-                <Paper elevation={5} sx={{borderRadius:5 ,minWidth:"1000px",borderRadius:3}}>
+                <Paper
+                  elevation={5}
+                  sx={{ borderRadius: 5, minWidth: "1000px", borderRadius: 3 }}
+                >
                   <AttendanceApprovalTable
+                    employeeId={employeeId}
                     startDate={startDate}
                     endDate={endDate}
                   />

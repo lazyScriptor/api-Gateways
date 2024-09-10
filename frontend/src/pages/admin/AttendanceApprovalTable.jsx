@@ -63,13 +63,20 @@ function getMainRowData(rows) {
       ),
     wd_requesting_user_id: mainRow.wd_requesting_user_id || "N/A",
     wd_date: mainRow.wd_date || "N/A",
+    approving_user_name:
+      [mainRow.approving_user_fname, " ", mainRow.approving_user_lname] ||
+      "N/A",
+    requesting_user_name:
+      [mainRow.requesting_user_fname, " ", mainRow.requesting_user_lname] ||
+      "N/A",
   };
 }
 
 function Row(props) {
+  const currentUserId = localStorage.getItem("userId")
   const { date, userId, rows, onStatusChange } = props;
   const [open, setOpen] = React.useState(false);
-
+  const [isYes, setIsYes] = useState(false);
   const mainRowData = getMainRowData(rows);
 
   const handleBtn = async (status) => {
@@ -117,15 +124,18 @@ function Row(props) {
         </TableCell>
         <TableCell align="center">{mainRowData.wda_time}</TableCell>
         <TableCell align="center">{userId}</TableCell>
-        <TableCell align="center">{mainRowData.u_fname}</TableCell>
+        <TableCell align="center">{mainRowData.requesting_user_name}</TableCell>
+        <TableCell align="center">{mainRowData.approving_user_name}</TableCell>
         <TableCell align="center">
           <Button
+            disabled={mainRowData.wd_requesting_user_id == currentUserId}
             onClick={() => handleBtn(1)}
             sx={{ minWidth: "10px", width: "35px" }}
           >
             <ThumbUpAltIcon />
           </Button>
           <Button
+           disabled={mainRowData.wd_requesting_user_id == currentUserId}
             onClick={handleRejectBtn}
             color="error"
             sx={{ minWidth: "10px", width: "35px" }}
@@ -136,7 +146,7 @@ function Row(props) {
         <TableCell align="center">{mainRowData.wda_approval_status}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
@@ -190,7 +200,11 @@ Row.propTypes = {
   onStatusChange: PropTypes.func.isRequired,
 };
 
-export default function AttendanceApprovalTable() {
+export default function AttendanceApprovalTable({
+  employeeId,
+  startDate,
+  endDate,
+}) {
   const [toogle, setToogle] = useState(false);
   const [attendaceApprovalDetails, setAttendaceApprovalDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -205,7 +219,7 @@ export default function AttendanceApprovalTable() {
             import.meta.env.VITE_API_URL
           }/thunder/attendance/getdetails/approval/${userId}`
         );
-        console.log(response.data);
+        // console.log(response.data.data);
         setAttendaceApprovalDetails(response.data.data);
       } catch (err) {
         console.error("Error fetching attendance details:", err);
@@ -222,10 +236,19 @@ export default function AttendanceApprovalTable() {
     setToogle(!toogle); // Toggle the state to trigger data re-fetch
   };
 
+  // Filter data based on employeeId
+  const filteredData = employeeId
+    ? attendaceApprovalDetails.filter(
+        (item) => item.wd_requesting_user_id == employeeId
+      )
+    : attendaceApprovalDetails;
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+  if (filteredData.length === 0)
+    return <p>There are no records matching the criteria.</p>;
 
-  const groupedData = groupByDateAndUser(attendaceApprovalDetails);
+  const groupedData = groupByDateAndUser(filteredData);
 
   return (
     <TableContainer
@@ -234,6 +257,11 @@ export default function AttendanceApprovalTable() {
         borderRadius: 3,
         maxHeight: 440,
         overflowY: "auto",
+        boxShadow: 1,
+        transition: "box-shadow 0.3s ease-in-out",
+        "&:hover": {
+          boxShadow: 10,
+        },
         "&::-webkit-scrollbar": {
           display: "none",
         },
@@ -252,10 +280,13 @@ export default function AttendanceApprovalTable() {
               Approval Time
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              User ID
+              Requested user ID
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              User Name
+              Requested user Name
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Approved user
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
               Approval Action

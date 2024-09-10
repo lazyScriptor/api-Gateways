@@ -25,7 +25,6 @@ export const setAttendanceInDetails = async (body) => {
 };
 
 export const setAttendanceOutDetails = async (body) => {
-  console.log("database", body);
   try {
     const [results] = await pool.query(
       `
@@ -33,7 +32,7 @@ export const setAttendanceOutDetails = async (body) => {
       `,
       [body.endTime, body.userId, body.sessionToken]
     );
-    console.log(results);
+
     return results;
   } catch (error) {
     console.error("Error in setAttendanceOutDetails:", error);
@@ -72,18 +71,27 @@ export const getAttendaceApprovalDetails = async (userId) => {
   try {
     const [response] = await pool.query(
       `
- SELECT * 
+SELECT 
+    work_duration.*, 
+    work_duration_approval.*, 
+    approving_user.u_fname AS approving_user_fname, 
+    approving_user.u_lname AS approving_user_lname,
+    requesting_user.u_fname AS requesting_user_fname, 
+    requesting_user.u_lname AS requesting_user_lname
 FROM work_duration 
 LEFT JOIN work_duration_approval 
-ON work_duration.wd_wda_id = work_duration_approval.wda_id 
-LEFT JOIN user
-ON user.u_id=work_duration_approval.wda_approved_user_id
-WHERE work_duration.wd_requesting_user_id != ?;
+    ON work_duration.wd_wda_id = work_duration_approval.wda_id 
+LEFT JOIN user AS approving_user
+    ON approving_user.u_id = work_duration_approval.wda_approved_user_id
+LEFT JOIN user AS requesting_user
+    ON requesting_user.u_id = work_duration.wd_requesting_user_id
+
+
 
     `,
       [userId]
     );
-    console.log(response)
+
     return response;
   } catch (error) {
     console.error("Error in getUserlatestOutDetails database.js");
@@ -100,7 +108,6 @@ export const setApprovalDetails = async (data) => {
     requestingUserId,
   } = data;
   try {
-    console.log(data.date);
     const [response] = await pool.query(
       `
       INSERT INTO work_duration_approval (wda_approved_user_id,wda_time,wda_approval_status) VALUES (?,?,?)
@@ -108,7 +115,7 @@ export const setApprovalDetails = async (data) => {
       [data.approvedUserId, data.date, data.approvalStatus]
     );
     const insertId = response.insertId;
-    
+
     const response2 = await pool.query(
       `
       UPDATE work_duration

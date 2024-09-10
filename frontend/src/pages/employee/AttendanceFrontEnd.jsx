@@ -11,34 +11,8 @@ import Navbar from "../../Navbar";
 import axios from "axios";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-function getSriLankaDateTime(dateString) {
-  const date = new Date(dateString);
-  const options = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZone: "Asia/Colombo",
-    hour12: false,
-  };
-  const datePart = new Intl.DateTimeFormat("en-CA", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    timeZone: "Asia/Colombo",
-  }).format(date);
-  const timePart = new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZone: "Asia/Colombo",
-    hour12: false,
-  }).format(date);
-  return `${datePart} ${timePart}`;
-}
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+
 function AttendanceFrontEnd() {
   const userId = localStorage.getItem("userId");
 
@@ -81,40 +55,17 @@ function AttendanceFrontEnd() {
       month: "2-digit",
       day: "2-digit",
     });
-  
+
     // Format the date string as 'YYYY-MM-DD'
-    const [month, day, year] = sriLankaDateString.split('/');
+    const [month, day, year] = sriLankaDateString.split("/");
     return `${year}-${month}-${day}`;
   };
-  const dateTimeConvertions = () => {
-    const currentDateTime = new Date();
-  
-    // // Convert the current date and time to Sri Lanka's time zone (Asia/Colombo)
-    // const sriLankaDateTimeString = currentDateTime.toLocaleString("en-US", {
-    //   timeZone: "Asia/Colombo",
-    //   year: "numeric",
-    //   month: "2-digit",
-    //   day: "2-digit",
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    //   second: "2-digit",
-    //   hour12: false, // Use 24-hour format
-    // });
-  
-    // // Format the date and time string as 'YYYY-MM-DDTHH:MM:SS'
-    // const [date, time] = sriLankaDateTimeString.split(', ');
-    // const [month, day, year] = date.split('/');
-    // const formattedDateTime = `${year}-${month}-${day}T${time}`;
-  
-    return currentDateTime;
-  };
 
-  
   const handleClickIn = async () => {
     setInBtnStatus(true); // Set button status to loading or disabled
     setOutBtnStatus(false);
     try {
-      console.log("dasdqawduaid")
+      console.log("dasdqawduaid");
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/thunder/attendance/in`,
         {
@@ -123,7 +74,7 @@ function AttendanceFrontEnd() {
           startTime: new Date(),
         }
       );
-      console.log("dataaaaaaa",data)
+      console.log("dataaaaaaa", data);
       setSessionToken(data.insertId);
       localStorage.setItem("sessionToken", data.insertId);
 
@@ -188,7 +139,9 @@ function AttendanceFrontEnd() {
         <Navbar />
         <Box sx={{ display: "flex" }}>
           <Typography variant="h6">
-            <strong>Employee attendance view - {localStorage.getItem("userName")}</strong>
+            <strong>
+              Employee attendance view - {localStorage.getItem("userName")}
+            </strong>
           </Typography>
           <Box flexGrow={1} />
           <Typography variant="h6">Token number: {sessionToken}</Typography>
