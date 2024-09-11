@@ -22,9 +22,9 @@ import DoneAllIcon from "@mui/icons-material/DoneAll"; // Success
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"; // Pending
 import CancelIcon from "@mui/icons-material/Cancel"; // Rejected
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-const handle=()=>{
-  setToogle(!toogle)
-}
+const handle = () => {
+  setToogle(!toogle);
+};
 // Group by date and userId
 function groupByDateAndUser(data) {
   return data.reduce((acc, item) => {
@@ -75,7 +75,7 @@ function getMainRowData(rows) {
 }
 
 function Row(props) {
-  const currentUserId = localStorage.getItem("userId")
+  const currentUserId = localStorage.getItem("userId");
   const { date, userId, rows, onStatusChange } = props;
   const [open, setOpen] = React.useState(false);
   const [isYes, setIsYes] = useState(false);
@@ -124,10 +124,18 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {date}
         </TableCell>
-        <TableCell align="center">{mainRowData.wda_time}</TableCell>
         <TableCell align="center">{userId}</TableCell>
-        <TableCell align="center">{mainRowData.requesting_user_name}</TableCell>
-        <TableCell align="center">{mainRowData.approving_user_name}</TableCell>
+        <TableCell
+          align="left"
+          sx={{
+            borderRight: 2,
+            borderColor: "#b9b7b760",
+          }}
+        >
+          {mainRowData.requesting_user_name}
+        </TableCell>
+        <TableCell align="right">{mainRowData.approving_user_name}</TableCell>
+        <TableCell align="center">{mainRowData.wda_time}</TableCell>
         <TableCell align="center">
           <Button
             disabled={mainRowData.wd_requesting_user_id == currentUserId}
@@ -137,7 +145,7 @@ function Row(props) {
             <ThumbUpAltIcon />
           </Button>
           <Button
-           disabled={mainRowData.wd_requesting_user_id == currentUserId}
+            disabled={mainRowData.wd_requesting_user_id == currentUserId}
             onClick={handleRejectBtn}
             color="error"
             sx={{ minWidth: "10px", width: "35px" }}
@@ -202,11 +210,7 @@ Row.propTypes = {
   onStatusChange: PropTypes.func.isRequired,
 };
 
-export default function AttendanceApprovalTable({
-  employeeId,
-  startDate,
-  endDate,
-}) {
+export default function AttendanceApprovalTable({ employeeId, startDate, endDate }) {
   const [toogle, setToogle] = useState(false);
   const [attendaceApprovalDetails, setAttendaceApprovalDetails] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -217,11 +221,8 @@ export default function AttendanceApprovalTable({
     const fetchAttendanceDetails = async () => {
       try {
         const response = await axios.get(
-          `${
-            import.meta.env.VITE_API_URL
-          }/thunder/attendance/getdetails/approval/${userId}`
+          `${import.meta.env.VITE_API_URL}/thunder/attendance/getdetails/approval/${userId}`
         );
-        // console.log(response.data.data);
         setAttendaceApprovalDetails(response.data.data);
       } catch (err) {
         console.error("Error fetching attendance details:", err);
@@ -234,16 +235,28 @@ export default function AttendanceApprovalTable({
     fetchAttendanceDetails();
   }, [toogle]);
 
+  useEffect(() => {
+    console.log("mounted", startDate, endDate);
+  }, [startDate, endDate]);
+
   const handleStatusChange = () => {
     setToogle(!toogle); // Toggle the state to trigger data re-fetch
   };
 
-  // Filter data based on employeeId
-  const filteredData = employeeId
-    ? attendaceApprovalDetails.filter(
-        (item) => item.wd_requesting_user_id == employeeId
-      )
-    : attendaceApprovalDetails;
+  // Filter data based on date range and employeeId
+  const filteredData = attendaceApprovalDetails.filter((item) => {
+    const itemDate = new Date(item.wd_date.split("T")[0]); // Extract date part and convert to Date object
+    const start = startDate ? new Date(startDate) : new Date(0); // Default to epoch if not provided
+    const end = endDate ? new Date(endDate) : new Date(); // Default to today if not provided
+
+    // Check if itemDate falls within the date range
+    const dateInRange = itemDate >= start && itemDate <= end;
+
+    // Check if employeeId matches (if provided)
+    const matchesEmployeeId = employeeId ? item.wd_requesting_user_id == employeeId : true;
+
+    return dateInRange && matchesEmployeeId;
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -257,7 +270,7 @@ export default function AttendanceApprovalTable({
       component={Paper}
       sx={{
         borderRadius: 3,
-        maxHeight: 440,
+        maxHeight: 300,
         overflowY: "auto",
         boxShadow: 1,
         transition: "box-shadow 0.3s ease-in-out",
@@ -279,9 +292,6 @@ export default function AttendanceApprovalTable({
               Request date
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Approval Time
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
               Requested user ID
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
@@ -289,6 +299,9 @@ export default function AttendanceApprovalTable({
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
               Approved user
+            </TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              Approval Time
             </TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold" }}>
               Approval Action

@@ -2,11 +2,12 @@ import {
   Box,
   Button,
   Divider,
+  FormLabel,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../Navbar";
 import Avatar from "@mui/material/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,6 +17,7 @@ function Attendance() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const userName = localStorage.getItem("userName");
 
   const handleDateChange = (event) => {
     const { name, value } = event.target;
@@ -55,6 +57,7 @@ function Attendance() {
               {/* Row 1 */}
               <div className="col-span-8">
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
+                  <FormLabel sx={{ mr: 1 }}>Search Employee by ID</FormLabel>
                   <TextField
                     component={Paper}
                     elevation="2"
@@ -69,35 +72,39 @@ function Attendance() {
               </div>
               <div className="col-span-4 flex justify-end">
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <FormLabel sx={{mr:3}}>{userName}</FormLabel>
+                  <Avatar alt={userName} src="/static/images/avatar/1.jpg" />
                 </div>
               </div>
               {/* Row 2 */}
-              <div className="col-span-4">
+              {/* <div className="col-span-4">
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none"></div>
-              </div>
-              <div className="col-span-8 flex gap-2 justify-end items-center">
-                <h1 className="mr-2">Start date</h1>
-                <TextField
-                  component={Paper}
-                  elevation={2}
-                  type="date"
-                  name="startDate"
-                  value={startDate}
-                  onChange={handleDateChange}
-                  sx={{ backgroundColor: "transparent" }}
-                />
-                <h1 className="mr-2">End date</h1>
-                <TextField
-                  component={Paper}
-                  elevation={2}
-                  type="date"
-                  name="endDate"
-                  value={endDate}
-                  onChange={handleDateChange}
-                  sx={{ backgroundColor: "transparent" }}
-                />
-              </div>
+              </div> */}
+              <Paper
+                sx={{ width: "500px", p: 2, borderRadius: 3, m: 3 }}
+                elevation={3}
+              >
+                <div className="col-span-8 flex gap-2 justify-end items-center">
+                  <FormLabel>StartDate</FormLabel>
+                  <TextField
+                    elevation={2}
+                    type="date"
+                    name="startDate"
+                    value={startDate}
+                    onChange={handleDateChange}
+                    sx={{ backgroundColor: "transparent" }}
+                  />
+                  <h1 className="mr-2">End date</h1>
+                  <TextField
+                    elevation={2}
+                    type="date"
+                    name="endDate"
+                    value={endDate}
+                    onChange={handleDateChange}
+                    sx={{ backgroundColor: "transparent" }}
+                  />
+                </div>
+              </Paper>
               {/* Row 3 */}
               <div className="col-span-12 flex justify-center">
                 <Paper
