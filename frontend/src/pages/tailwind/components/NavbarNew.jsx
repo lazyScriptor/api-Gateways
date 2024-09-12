@@ -25,7 +25,7 @@ function NavbarNew() {
               href="#"
               className="text-primary font-semibold tracking-widest text-2xl uppercase sm:text-3xl"
             >
-              Eshop
+              T-Shop
             </a>
             {/* Menu items */}
             <div className="hidden lg:block">
@@ -53,7 +53,7 @@ function NavbarNew() {
                   </a>
 
                   {/* Drop down links */}
-                  <div className="absolute z-[9999] transition-all duration-200 hidden group-hover:block w-[200px] rounded-md bh-white shadow-lg dark:bg-gray-900 p-2 text-white ">
+                  <div className="absolute z-[9999] transition-all duration-200 hidden group-hover:block w-[200px] rounded-md bg-white shadow-lg dark:bg-gray-900 p-2 text-white ">
                     <ul className="space-y-2">
                       {dropDownLinks.map((item, index) => (
                         <li

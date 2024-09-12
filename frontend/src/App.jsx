@@ -1,23 +1,42 @@
 import React, { lazy, Suspense } from "react";
 import Login from "./login/Login";
+import { helix } from "ldrs";
+
+helix.register();
+
+// Default values shown
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Entry from "./Entry";
-// import Attendance from "./pages/employee/Attendance";
 import Shifts from "./pages/employee/Shifts";
-// import AttendanceFrontEnd from "./pages/employee/AttendanceFrontEnd";
 import TailwindSection from "./pages/employee/TailwindSection";
-import EComWeb from "./pages/tailwind/EComWeb";
 
+// Lazy load with default behavior
 const Attendance = lazy(() => import("./pages/employee/Attendance"));
 const AttendanceFrontEnd = lazy(() =>
   import("./pages/employee/AttendanceFrontEnd")
+);
+
+// Function to simulate a 3-second delay before loading the EcomWeb component
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const EcomWeb = lazy(() =>
+  delay(3000).then(() => import("./pages/tailwind/EComWeb"))
 );
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Suspense fallback={<h1>Loading...</h1>}>
+        <Suspense
+          fallback={
+            <>
+              <div className="w-screen h-screen flex justify-center items-center bg-white bg-opacity-5">
+                <l-helix size="45" speed="2.5" color="#00059e"></l-helix>
+              </div>
+            </>
+          }
+        >
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/hero" element={<Entry />} />
@@ -25,7 +44,8 @@ function App() {
             <Route path="/shifts" element={<Shifts />} />
             <Route path="/attendance-fe" element={<AttendanceFrontEnd />} />
             <Route path="/tailwind" element={<TailwindSection />} />
-            <Route path="/ecom-web" element={<EComWeb />} />
+            {/* EcomWeb will now load after a 3-second delay */}
+            <Route path="/ecom-web" element={<EcomWeb />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
