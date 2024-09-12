@@ -6,6 +6,7 @@ import Entry from "./Entry";
 import Shifts from "./pages/employee/Shifts";
 // import AttendanceFrontEnd from "./pages/employee/AttendanceFrontEnd";
 import TailwindSection from "./pages/employee/TailwindSection";
+import EComWeb from "./pages/tailwind/EComWeb";
 
 const Attendance = lazy(() => import("./pages/employee/Attendance"));
 const AttendanceFrontEnd = lazy(() =>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/shifts" element={<Shifts />} />
             <Route path="/attendance-fe" element={<AttendanceFrontEnd />} />
             <Route path="/tailwind" element={<TailwindSection />} />
+            <Route path="/ecom-web" element={<EComWeb />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

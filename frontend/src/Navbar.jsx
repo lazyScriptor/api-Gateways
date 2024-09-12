@@ -50,6 +50,11 @@ function Navbar() {
                 Tailwind
               </button>
             </li>
+            <li className="p-4" onClick={() => [navigate("/ecom-web")]}>
+              <button className="hover:text-lg hover:text-blue-200 transition-all duration-300">
+                ecom
+              </button>
+            </li>
             <li className="p-4" onClick={() => [navigate("/")]}>
               <button className="hover:text-lg hover:text-red-400 transition-all duration-300">
                 Logout
