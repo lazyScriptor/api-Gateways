@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Entry from "./Entry";
 import Shifts from "./pages/employee/Shifts";
 import TailwindSection from "./pages/employee/TailwindSection";
+import NavbarNew from "./pages/tailwind/components/NavbarNew";
 
 // Lazy load with default behavior
 const Attendance = lazy(() => import("./pages/employee/Attendance"));
@@ -31,8 +32,13 @@ function App() {
         <Suspense
           fallback={
             <>
-              <div className="w-screen h-screen flex justify-center items-center bg-white bg-opacity-5">
-                <l-helix size="45" speed="2.5" color="#00059e"></l-helix>
+                <NavbarNew/>
+              <div
+                className="w-screen h-screen flex justify-center items-center  bg-gradient-to-r from-gray-300/80 to-gray-100 
+    dark:from-gray-800 dark:to-gray-500 dark:text-white
+    transition-all duration-500"
+              >
+                <l-helix size="450" speed="2.5" color="#111827"></l-helix>
               </div>
             </>
           }
