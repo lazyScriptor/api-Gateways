@@ -106,9 +106,9 @@ const heroSliderData = [
 
 function EcomHero() {
   const settings = {
-    dots: false,
+    dots: true,
     infinite: true,
-    arrows: false,
+    arrows: true,
     speed: 800,
     slidesToScroll: 1,
     autoplaySpeed: 4000,
@@ -138,7 +138,12 @@ function EcomHero() {
                     {item.title2}
                   </h2>
                   <div>
-              <ShareButton  text={"Shop now"} bgColor={"primary"} textColor={"white"} handler={''}/>
+                    <ShareButton
+                      text={"Shop now"}
+                      bgColor={"primary"}
+                      textColor={"white"}
+                      handler={""}
+                    />
                   </div>
                 </div>
                 {/* Image section */}

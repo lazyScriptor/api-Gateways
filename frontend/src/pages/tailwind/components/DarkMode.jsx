@@ -42,7 +42,8 @@ function DarkMode() {
         </button>
 
         {/* This div will be displayed on button hover with a smooth opacity transition */}
-        <div className="absolute top-full mt-2 w-4 h-4 bg-black opacity-0  group-hover:opacity-100 transition-opacity duration-500">
+        <div className="absolute right-[-105px] top-[-2px]  w-[100px] h-5 border-2 border-gray-200 dark:border-gray-400 rounded-md  opacity-0  group-hover:opacity-100 transition-color duration-200 text-[11px] flex items-center justify-center p-2 text-gray-400 ">
+          Switch mode
         </div>
       </div>
     </>

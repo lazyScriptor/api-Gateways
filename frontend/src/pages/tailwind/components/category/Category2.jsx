@@ -13,7 +13,7 @@ function Category() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 ">
           {/* first col */}
 
-          <div className="sm:col-span-2 relative p-2 order-3  md:order-3">
+          <div className="sm:col-span-2 relative p-2 order-3  md:order-3 lg:order-1">
             <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br from-brandWhite to-brandWhite/90 text-white rounded-3xl  h-[320px]">
               {/* third col -text */}
               <div>

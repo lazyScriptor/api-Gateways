@@ -16,7 +16,7 @@ const dropDownLinks = [
 ];
 function NavbarNew() {
   return (
-    <div className="bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
+    <div className="bg-white dark:bg-gray-900 dark:text-white duration-500 relative z-40">
       <div className="py-4">
         <div className="container flex justify-between items-center ">
           {/* {logo and links } */}
