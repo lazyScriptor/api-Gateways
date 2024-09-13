@@ -12,8 +12,8 @@ function Category() {
       <div className="container">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* first col */}
-          <div className="relative p-2">
-            <div className="py-10 pl-5 bg-gradient-to-br from-black/90 to-black/70 text-white rounded-3xl  h-[320px] flex items-end">
+          <div className="relative p-2 h">
+            <div className="py-10 pl-5 bg-gradient-to-br from-black/90 to-black/70 text-white rounded-3xl transition-all duration-500 h-[320px] flex items-end hover:drop-shadow-xl hover:shadow-xl hover:shadow-gray-500/50  cursor-pointer">
               {/* first col -text */}
               <div>
                 <div className="mb-4">
@@ -39,8 +39,8 @@ function Category() {
             </div>
           </div>
           {/* second col */}
-          <div className="relative p-2">
-            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br dark:from-brandGreen dark:to-[#49daadc9] from-brandGreen to-brandGreen/90 text-white rounded-3xl  h-[320px]">
+          <div className="relative p-2 ">
+            <div className="py-10 pl-5 flex items-end category-components transition-all duration-500 bg-gradient-to-br dark:from-brandGreen dark:to-[#49daadc9] from-brandGreen to-brandGreen/90 text-white rounded-3xl  h-[320px]  hover:drop-shadow-xl hover:shadow-xl hover:shadow-gray-500/50  cursor-pointer">
               {/* second col -text */}
               <div>
                 <div className="mb-4">
@@ -67,7 +67,7 @@ function Category() {
           </div>
           {/* third col */}
           <div className="sm:col-span-2 relative p-2">
-            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br from-primary to-primary/90 text-white rounded-3xl  h-[320px]">
+            <div className="py-10 pl-5 flex items-end category-components transition-all duration-500 bg-gradient-to-br from-primary to-primary/90 text-white rounded-3xl  h-[320px]  hover:drop-shadow-xl hover:shadow-xl hover:shadow-gray-500/50  cursor-pointer">
               {/* third col -text */}
               <div>
                 <div className="mb-4">

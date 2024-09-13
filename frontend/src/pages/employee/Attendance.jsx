@@ -72,7 +72,7 @@ function Attendance() {
               </div>
               <div className="col-span-4 flex justify-end">
                 <div className="bg-transparent p-1 text-center text-gray-600 shadow-none flex items-center">
-                  <FormLabel sx={{mr:3}}>{userName}</FormLabel>
+                  <FormLabel sx={{ mr: 3 }}>{userName}</FormLabel>
                   <Avatar alt={userName} src="/static/images/avatar/1.jpg" />
                 </div>
               </div>
@@ -109,7 +109,7 @@ function Attendance() {
               <div className="col-span-12 flex justify-center">
                 <Paper
                   elevation={5}
-                  sx={{ borderRadius: 5, minWidth: "1000px", borderRadius: 3 }}
+                  sx={{ minWidth: "1000px", borderRadius: 3 }}
                 >
                   <AttendanceApprovalTable
                     employeeId={employeeId}

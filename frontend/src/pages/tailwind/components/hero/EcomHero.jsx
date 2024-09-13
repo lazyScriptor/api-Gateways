@@ -128,10 +128,21 @@ function EcomHero() {
               <div className="w-full grid grid-cols-1 sm:grid-cols-2">
                 {/* Title section */}
                 <div className="flex justify-center flex-col gap-4 sm:pl-3 pt-12 sm:pt-0 text-center sm:text-left order-2 sm:order-1 relative z-10">
-                  <h2 className="text-2xl sm:text-6xl lg:text-2xl font-bold">
+                  <h2
+                    data-aos="zoom-out"
+                    data-aos-duration="500"
+                    data-aos-once="true"
+                    className="text-2xl sm:text-6xl lg:text-2xl font-bold"
+                  >
                     {item.subtitle}
                   </h2>
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold">
+                  <h1
+                    data-aos="zoom-out"
+                    data-aos-duration="500"
+                    data-aos-once="true"
+                    data-aos-delay="150"
+                    className="text-5xl sm:text-6xl lg:text-7xl font-bold"
+                  >
                     {item.title}
                   </h1>
                   <h2 className="text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30">

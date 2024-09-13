@@ -1,6 +1,8 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import Login from "./login/Login";
 import { helix } from "ldrs";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 helix.register();
 
@@ -22,10 +24,19 @@ const AttendanceFrontEnd = lazy(() =>
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const EcomWeb = lazy(() =>
-  delay(3000).then(() => import("./pages/tailwind/EComWeb"))
+  delay(500).then(() => import("./pages/tailwind/EComWeb"))
 );
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: "ease-in-sine",
+      delay: 100,
+      offset: 100,
+    });
+    AOS.refresh();
+  }, []);
   return (
     <>
       <BrowserRouter>
