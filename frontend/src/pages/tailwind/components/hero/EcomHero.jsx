@@ -10,6 +10,7 @@ import Image7 from "../../assets/Image7.png";
 import Image8 from "../../assets/Image8.png";
 import Image9 from "../../assets/Image9.png";
 import Image10 from "../../assets/Image10.png";
+import ShareButton from "../share/ShareButton";
 const heroSliderData = [
   {
     id: 1,
@@ -133,13 +134,11 @@ function EcomHero() {
                   <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold">
                     {item.title}
                   </h1>
-                  <h2 className="text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-10">
+                  <h2 className="text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30">
                     {item.title2}
                   </h2>
                   <div>
-                    <button className="border-primary border-2 rounded-full p-2 w-[160px] text-white font-bold  bg-primary">
-                      Shop now
-                    </button>
+              <ShareButton  text={"Shop now"} bgColor={"primary"} textColor={"white"} handler={''}/>
                   </div>
                 </div>
                 {/* Image section */}

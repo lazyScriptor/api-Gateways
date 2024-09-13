@@ -32,12 +32,13 @@ function App() {
         <Suspense
           fallback={
             <>
-                <NavbarNew/>
               <div
-                className="w-screen h-screen flex justify-center items-center  bg-gradient-to-r from-gray-300/80 to-gray-100 
-    dark:from-gray-800 dark:to-gray-500 dark:text-white
+                className="w-screen h-screen flex flex-col justify-center items-center gap-8 bg-gradient-to-b from-white to-gray-500 
+    dark:from-gray-900 dark:to-gray-600 dark:text-white
     transition-all duration-500"
               >
+                {/* <NavbarNew /> */}
+
                 <l-helix size="450" speed="2.5" color="#111827"></l-helix>
               </div>
             </>
