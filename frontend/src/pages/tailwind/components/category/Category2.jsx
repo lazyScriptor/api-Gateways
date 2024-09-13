@@ -10,17 +10,18 @@ function Category() {
   return (
     <div className="py-8">
       <div className="container">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 ">
           {/* first col */}
-          <div className="relative p-2">
-            <div className="py-10 pl-5 bg-gradient-to-br from-black/90 to-black/70 text-white rounded-3xl  h-[320px] flex items-end">
-              {/* first col -text */}
+
+          <div className="sm:col-span-2 relative p-2 order-3  md:order-3">
+            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br from-brandWhite to-brandWhite/90 text-white rounded-3xl  h-[320px]">
+              {/* third col -text */}
               <div>
                 <div className="mb-4">
-                  <p className="mb-[2px] text-gray-400">Enjoy</p>
-                  <p className="text-2xl font-semibold mb-[2px]">With</p>
-                  <p className="text-4xl xl:text-5xl font-bold opacity-20 mb-2">
-                    Earphone
+                  <p className="mb-[2px] text-gray-600">Enjoy</p>
+                  <p className="text-2xl text-gray-300 font-semibold mb-[2px]">With</p>
+                  <p className="text-4xl text-gray-400 xl:text-5xl font-bold opacity-50 mb-2">
+                    i Watch
                   </p>
                   <ShareButton
                     text={"Browse"}
@@ -28,19 +29,19 @@ function Category() {
                     textColor={"white"}
                   />
                 </div>
-                {/* first col-image */}
+                {/* third col-image */}
                 <div>
                   <img
-                    src={Image1}
-                    className="absolute max-w-[200px] w-[70%] top-0 right-0 "
+                    src={Image2}
+                    className="absolute max-w-[250px] w-[70%]  top-0 right-0 "
                   />
                 </div>
               </div>
             </div>
           </div>
           {/* second col */}
-          <div className="relative p-2">
-            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br dark:from-brandGreen dark:to-[#49daadc9] from-brandGreen to-brandGreen/90 text-white rounded-3xl  h-[320px]">
+          <div className="relative p-2 order-1 md:order-1">
+            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br from-brandYellow to-brandYellow/90 text-white rounded-3xl  h-[320px]">
               {/* second col -text */}
               <div>
                 <div className="mb-4">
@@ -66,15 +67,15 @@ function Category() {
             </div>
           </div>
           {/* third col */}
-          <div className="sm:col-span-2 relative p-2">
-            <div className="py-10 pl-5 flex items-end category-components transition-colors duration-500 bg-gradient-to-br from-primary to-primary/90 text-white rounded-3xl  h-[320px]">
-              {/* third col -text */}
+          <div className="relative p-2 order-2 md:order-2">
+            <div className="py-10 pl-5 bg-gradient-to-br from-brandBlue/90 to-brandBlue/70 text-white rounded-3xl  h-[320px] flex items-end">
+              {/* first col -text */}
               <div>
                 <div className="mb-4">
-                  <p className="mb-[2px] text-gray-600">Enjoy</p>
-                  <p className="text-2xl font-semibold mb-[2px]">With</p>
-                  <p className="text-4xl xl:text-5xl font-bold opacity-50 mb-2">
-                    i Watch
+                  <p className="mb-[2px] text-gray-400">Enjoy</p>
+                  <p className="text-2xl  font-semibold mb-[2px]">With</p>
+                  <p className="text-4xl xl:text-5xl font-bold opacity-20 mb-2">
+                    Earphone
                   </p>
                   <ShareButton
                     text={"Browse"}
@@ -82,11 +83,11 @@ function Category() {
                     textColor={"white"}
                   />
                 </div>
-                {/* third col-image */}
+                {/* first col-image */}
                 <div>
                   <img
-                    src={Image2}
-                    className="absolute max-w-[300px] w-[70%] top-0 right-0  sm:top-5 sm:right-10 "
+                    src={Image1}
+                    className="absolute max-w-[200px] w-[70%] top-0 right-0 "
                   />
                 </div>
               </div>
