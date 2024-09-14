@@ -145,7 +145,7 @@ function EcomHero() {
                   >
                     {item.title}
                   </h1>
-                  <h2 className="text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30">
+                  <h2 className=" text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30">
                     {item.title2}
                   </h2>
                   <div>

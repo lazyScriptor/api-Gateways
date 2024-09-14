@@ -12,7 +12,7 @@ function Category() {
       <div className="container">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* first col */}
-          <div className="relative p-2 h">
+          <div className="relative p-2  ">
             <div className="py-10 pl-5 bg-gradient-to-br from-black/90 to-black/70 text-white rounded-3xl transition-all duration-500 h-[320px] flex items-end hover:drop-shadow-xl hover:shadow-xl hover:shadow-gray-500/50  cursor-pointer">
               {/* first col -text */}
               <div>

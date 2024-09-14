@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 * {
-  /* border: solid 1px red; */
+  /* border: solid 1px red;  */
   /* background-color: black; */
 }
 @layer components {
@@ -19,4 +19,20 @@
   .category-components{
     @apply transition-all duration-500 
   }
+}
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 2s ease-in-out infinite;
 }
