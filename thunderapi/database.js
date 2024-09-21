@@ -5,7 +5,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "employee_attendance_db",
+  database: "employee_attendance_db2",
   connectionLimit: 10,
 });
 
@@ -103,29 +103,40 @@ export const setApprovalDetails = async (data) => {
   const {
     approvalStatus,
     approvedUserId,
-    approvedTime,
-    date,
+    todayDate,
     requestingUserId,
+    requestingDate
   } = data;
   try {
+    // First Query - Insert into work_duration_approval
     const [response] = await pool.query(
       `
-      INSERT INTO work_duration_approval (wda_approved_user_id,wda_time,wda_approval_status) VALUES (?,?,?)
+      INSERT INTO work_duration_approval (wda_approved_user_id, wda_time, wda_approval_status)
+      VALUES (?, ?, ?)
       `,
-      [data.approvedUserId, data.date, data.approvalStatus]
+      [approvedUserId, todayDate, approvalStatus]
     );
     const insertId = response.insertId;
 
-    const response2 = await pool.query(
+    // Second Query - Update work_duration with insertId
+    await pool.query(
       `
       UPDATE work_duration
       SET wd_wda_id = ?
-      WHERE wd_requesting_user_id = ? AND wd_date =? 
+      WHERE wd_requesting_user_id = ? AND wd_date =?
       `,
-      [insertId, requestingUserId, data.dateOnly]
+      [insertId, requestingUserId, requestingDate]
     );
+
+    return {
+      message: "Approval details set successfully",
+      status: true,
+    };
   } catch (error) {
-    console.error("Error in setApprovalDetails database.js");
-    throw error;
+    // Catch error and log details
+    console.error("Error in setApprovalDetails database.js:", error);
+    throw new Error(
+      "Error occurred while setting approval details: " + error.message
+    );
   }
 };

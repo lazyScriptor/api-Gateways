@@ -60,39 +60,34 @@ export default function Login() {
   }, []);
 
   const onSubmit = async (data) => {
-    navigate("/hero");
+    const credentials = {
+      username: data.username,
+      password: data.password,
+    };
 
-    // const credentials = {
-    //   username: data.username,
-    //   password: data.password,
-    // };
+    await axios
+      .post(`${import.meta.env.VITE_API_URL}/login/authenticate`, credentials)
+      .then((response) => {
+        try {
+          if (response.data.authStatus === true) {
+            localStorage.setItem("userType", response.data.results.ur_type);
+            localStorage.setItem("userId", response.data.results.u_id);
+            localStorage.setItem(
+              "userName",
+              `${response.data.results.u_fname} ${response.data.results.u_lname}`
+            );
+            localStorage.setItem("userType", response.data.results.ur_type);
 
-    // await axios
-    //   .post(
-    //     `${import.meta.env.VITE_API_URL}/login/authenticate`,
-    //     credentials
-    //   )
-    //   .then((response) => {
-    //     try {
-    //       if (response.data.authStatus === true) {
-    //         localStorage.setItem("userType", response.data.results.ur_type);
-    //         localStorage.setItem("userId", response.data.results.u_id);
-    //         localStorage.setItem(
-    //           "userName",
-    //           `${response.data.results.u_fname} ${response.data.results.u_lname}`
-    //         );
-    //         localStorage.setItem("userType", response.data.results.ur_type);
-
-    //         navigate("/hero");
-    //         console.log(response.data.results);
-    //       } else {
-    //         setLoginErrorText(response.data.results);
-    //         console.log(response.data.results);
-    //       }
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   });
+            navigate("/hero");
+            console.log(response.data.results);
+          } else {
+            setLoginErrorText(response.data.results);
+            console.log(response.data.results);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      });
   };
 
   const calculateTransform = () => {

@@ -22,9 +22,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll"; // Success
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty"; // Pending
 import CancelIcon from "@mui/icons-material/Cancel"; // Rejected
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-const handle = () => {
-  setToogle(!toogle);
-};
+
 // Group by date and userId
 function groupByDateAndUser(data) {
   return data.reduce((acc, item) => {
@@ -78,10 +76,13 @@ function Row(props) {
   const currentUserId = localStorage.getItem("userId");
   const { date, userId, rows, onStatusChange } = props;
   const [open, setOpen] = React.useState(false);
-  const [isYes, setIsYes] = useState(false);
   const mainRowData = getMainRowData(rows);
 
-  const handleBtn = async (status) => {
+  const handleBtn = async (status, date) => {
+    // Optimistically update UI
+    mainRowData.wda_approval_status = status;
+    onStatusChange(); // Trigger UI refresh
+
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/thunder/attendance/approve`,
@@ -89,17 +90,14 @@ function Row(props) {
           approvedUserId: localStorage.getItem("userId"),
           approvalStatus: status,
           requestingUserId: mainRowData.wd_requesting_user_id,
-          date: new Date(),
+          todayDate: new Date(),
+          requestingDate: date,
         }
       );
-      onStatusChange(); // Notify parent to refresh data
     } catch (error) {
       console.error("Error updating approval status:", error);
+      // Optionally, revert UI changes in case of error
     }
-  };
-
-  const handleRejectBtn = () => {
-    handleBtn(2); // Reject status code
   };
 
   return (
@@ -139,14 +137,14 @@ function Row(props) {
         <TableCell align="center">
           <Button
             disabled={mainRowData.wd_requesting_user_id == currentUserId}
-            onClick={() => handleBtn(1)}
+            onClick={() => handleBtn(1, date)}
             sx={{ minWidth: "10px", width: "35px" }}
           >
             <ThumbUpAltIcon />
           </Button>
           <Button
             disabled={mainRowData.wd_requesting_user_id == currentUserId}
-            onClick={handleRejectBtn}
+            onClick={() => handleBtn(2, date)}
             color="error"
             sx={{ minWidth: "10px", width: "35px" }}
           >
@@ -210,8 +208,12 @@ Row.propTypes = {
   onStatusChange: PropTypes.func.isRequired,
 };
 
-export default function AttendanceApprovalTable({ employeeId, startDate, endDate }) {
-  const [toogle, setToogle] = useState(false);
+export default function AttendanceApprovalTable({
+  employeeId,
+  startDate,
+  endDate,
+}) {
+  const [toogle, setToogle] = useState(false); // Correctly declared state for toggling
   const [attendaceApprovalDetails, setAttendaceApprovalDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -221,7 +223,9 @@ export default function AttendanceApprovalTable({ employeeId, startDate, endDate
     const fetchAttendanceDetails = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/thunder/attendance/getdetails/approval/${userId}`
+          `${
+            import.meta.env.VITE_API_URL
+          }/thunder/attendance/getdetails/approval/${userId}`
         );
         setAttendaceApprovalDetails(response.data.data);
       } catch (err) {
@@ -233,98 +237,87 @@ export default function AttendanceApprovalTable({ employeeId, startDate, endDate
     };
 
     fetchAttendanceDetails();
-  }, [toogle]);
+  }, [toogle]); // Re-fetch when toogle changes
 
   useEffect(() => {
     console.log("mounted", startDate, endDate);
   }, [startDate, endDate]);
 
   const handleStatusChange = () => {
-    setToogle(!toogle); // Toggle the state to trigger data re-fetch
+    setToogle((prev) => !prev); // Toggle the value to trigger data re-fetch
   };
 
   // Filter data based on date range and employeeId
   const filteredData = attendaceApprovalDetails.filter((item) => {
     const itemDate = new Date(item.wd_date.split("T")[0]); // Extract date part and convert to Date object
-    const start = startDate ? new Date(startDate) : new Date(0); // Default to epoch if not provided
-    const end = endDate ? new Date(endDate) : new Date(); // Default to today if not provided
+    const start = startDate ? new Date(startDate) : null;
+    const end = endDate ? new Date(endDate) : null;
 
-    // Check if itemDate falls within the date range
-    const dateInRange = itemDate >= start && itemDate <= end;
+    // Apply date filtering logic
+    const isWithinDateRange =
+      (!start || itemDate >= start) && (!end || itemDate <= end);
 
-    // Check if employeeId matches (if provided)
-    const matchesEmployeeId = employeeId ? item.wd_requesting_user_id == employeeId : true;
-
-    return dateInRange && matchesEmployeeId;
+    return (
+      (!employeeId || item.wd_requesting_user_id == employeeId) &&
+      isWithinDateRange
+    );
   });
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (filteredData.length === 0)
-    return <p>There are no records matching the criteria.</p>;
 
   const groupedData = groupByDateAndUser(filteredData);
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{
-        borderRadius: 3,
-        maxHeight: 300,
-        overflowY: "auto",
-        boxShadow: 1,
-        transition: "box-shadow 0.3s ease-in-out",
-        "&:hover": {
-          boxShadow: 10,
-        },
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        scrollbarWidth: "none", // For Firefox
-        msOverflowStyle: "none", // For Internet Explorer and Edge
-      }}
-    >
-      <Table stickyHeader aria-label="attendance approval table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align="left" sx={{ fontWeight: "bold" }}>
-              Request date
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Requested user ID
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Requested user Name
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Approved user
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Approval Time
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Approval Action
-            </TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold" }}>
-              Status
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.keys(groupedData).map((date) =>
-            Object.keys(groupedData[date]).map((userId) => (
-              <Row
-                key={`${date}-${userId}`}
-                date={date}
-                userId={parseInt(userId, 10)}
-                rows={groupedData[date][userId]}
-                onStatusChange={handleStatusChange}
-              />
-            ))
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow sx={{ borderColor: "transparent" }}>
+              <TableCell colSpan={4} align="center" sx={{ fontWeight: "bold" }}>
+                Requesting Section
+              </TableCell>
+              <TableCell colSpan={4} align="center" sx={{ fontWeight: "bold" }}>
+                Approval Section
+              </TableCell>
+            </TableRow>
+            <TableRow sx={{ borderColor: "transparent" }}>
+              <TableCell />
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                Date
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                User ID
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Requesting User
+              </TableCell>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                Approving User
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Approval Time
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Actions
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                Status
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.entries(groupedData).map(([date, users]) =>
+              Object.entries(users).map(([userId, rows]) => (
+                <Row
+                  key={`${date}-${userId}`}
+                  date={date}
+                  userId={userId}
+                  rows={rows}
+                  onStatusChange={handleStatusChange}
+                />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

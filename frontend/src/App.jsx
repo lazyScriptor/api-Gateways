@@ -24,7 +24,7 @@ const AttendanceFrontEnd = lazy(() =>
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const EcomWeb = lazy(() =>
-  delay(500).then(() => import("./pages/tailwind/EComWeb"))
+  delay(10).then(() => import("./pages/tailwind/EComWeb"))
 );
 
 function App() {

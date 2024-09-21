@@ -11,6 +11,7 @@ import Image8 from "../../assets/Image8.png";
 import Image9 from "../../assets/Image9.png";
 import Image10 from "../../assets/Image10.png";
 import ShareButton from "../share/ShareButton";
+import { motion, AnimatePresence, easeInOut, delay } from "framer-motion";
 const heroSliderData = [
   {
     id: 1,
@@ -103,23 +104,59 @@ const heroSliderData = [
       "Dyson V15 is the most powerful cordless vacuum, engineered for deep cleaning with laser detection for dust, powerful suction, and smart sensors. Ideal for homes with pets or allergens.",
   },
 ];
+const slideRightVariants = (duration, delay) => {
+  const slideRightVariants = {
+    hidden: { y: "-200%" }, // Start off-screen to the left
+    show: {
+      y: "0%",
+      transition: {
+        duration, // Duration of the slide-in
+        ease: "easeOut",
+        delay, // Delay before starting the slide-in animation
+      },
+    },
+    exit: {
+      y: "100%",
+      transition: {
+        duration: duration, // Duration of the slide-out
+        ease: "easeIn",
+      },
+    },
+  };
+  return slideRightVariants;
+};
+const zoomVariants = (duration, delay) => {
+  const zoomVariants = {
+    hidden: { scale: 0.2, opacity: 0 }, // Start off with smaller scale and hidden
+    show: {
+      scale: 1, // Zoom to normal size
+      opacity: 1,
+      transition: {
+        duration: duration,
+        ease: "easeIn",
+        delay: delay, // Delay to sync with title appearance
+      },
+    },
+  };
+  return zoomVariants;
+};
 
 function EcomHero() {
   const settings = {
     dots: true,
     infinite: true,
     arrows: true,
-    speed: 800,
+    speed: 500, // Reduced speed for smoother transitions
     slidesToScroll: 1,
-    autoplaySpeed: 4000,
+    autoplaySpeed: 3000, // Reduced speed for better performance
     cssEase: "ease-in-out",
-    pauseOnHover: false,
-    pauseOnFocus: true,
+    pauseOnHover: true, // Set to true to pause on hover
   };
+
   return (
     <div className="container mt-1">
       <div
-        className="overflow-hidden rounded-3xl min-h-[550px] sm-min-h-[650px] flex flex-col justify-center p-4 
+        className="overflow-hidden rounded-3xl min-h-[550px] sm:min-h-[650px] flex flex-col justify-center p-4 
      hero-bg-color relative shadow-black shadow-sm" // Make sure it's relative for proper layering
       >
         <Slider {...settings}>
@@ -128,26 +165,23 @@ function EcomHero() {
               <div className="w-full grid grid-cols-1 sm:grid-cols-2">
                 {/* Title section */}
                 <div className="flex justify-center flex-col gap-4 sm:pl-3 pt-12 sm:pt-0 text-center sm:text-left order-2 sm:order-1 relative z-10">
-                  <h2
-                    data-aos="zoom-out"
-                    data-aos-duration="500"
-                    data-aos-once="true"
-                    className="text-2xl sm:text-6xl lg:text-2xl font-bold"
-                  >
+                  <h2 className="text-2xl sm:text-6xl lg:text-2xl font-bold">
                     {item.subtitle}
                   </h2>
-                  <h1
-                    data-aos="zoom-out"
-                    data-aos-duration="500"
-                    data-aos-once="true"
-                    data-aos-delay="150"
-                    className="text-5xl sm:text-6xl lg:text-7xl font-bold"
-                  >
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold">
                     {item.title}
                   </h1>
-                  <h2 className=" text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30">
-                    {item.title2}
-                  </h2>
+                  <AnimatePresence>
+                    <motion.h2
+                      variants={slideRightVariants(1, 1)}
+                      initial="hidden"
+                      animate="show"
+                      exit="exit"
+                      className="text-5xl uppercase text-white dark:text-white/5 sm:text-[80px] md:text-[100px] xl:text-[150px] font-bold z-30"
+                    >
+                      {item.title2}
+                    </motion.h2>
+                  </AnimatePresence>
                   <div>
                     <ShareButton
                       text={"Shop now"}
@@ -159,12 +193,15 @@ function EcomHero() {
                 </div>
                 {/* Image section */}
                 <div className="order-1 sm:order-2 relative z-20">
-                  {" "}
-                  {/* Ensure this z-index is higher */}
-                  <img
-                    src={item.img}
-                    className="w-[400px] h-[400px] sx:h-[450px] sm:scale-105 lg:scale-110 object-contain mx-auto drop-shadow-[-8px_4px_6px_rgba(0,0,0,0.4 )] z-30"
-                  />
+                  <AnimatePresence>
+                    <motion.img
+                      src={item.img}
+                      className="w-[400px] h-[400px] sx:h-[450px] sm:scale-105 lg:scale-110 object-contain mx-auto drop-shadow-[-8px_4px_6px_rgba(0,0,0,0.4)] z-30"
+                      variants={zoomVariants(0.5, 0.6)}
+                      initial="hidden"
+                      animate="show"
+                    />
+                  </AnimatePresence>
                 </div>
               </div>
             </div>

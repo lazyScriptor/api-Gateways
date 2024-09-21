@@ -160,8 +160,8 @@ export const setApprovalDetailsService = async (data) => {
   try {
     const formatteddata = {
       ...data,
-      date: getSriLankaDateTime(data.date),
-      dateOnly: getSriLankaDateOnly(data.date),
+      todayDate: getSriLankaDateTime(data.todayDate),
+      dateOnly: getSriLankaDateOnly(data.todayDate),
     };
 
     const response = await setApprovalDetails(formatteddata);
