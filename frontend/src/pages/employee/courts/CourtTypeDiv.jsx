@@ -1,97 +1,44 @@
 import { Button } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { GrNext, GrPrevious } from "react-icons/gr";
+import { CourtTypeContext } from "../../../contexts/Contexts";
 
-const buttonTypes = [
-  {
-    id: 1,
-    name: "Tennis",
-    color: "success",
-  },
-  {
-    id: 2,
-    name: "Cricket",
-    color: "error",
-  },
-  {
-    id: 3,
-    name: "Football",
-    color: "info",
-  },
-  {
-    id: 4,
-    name: "Indoor Cricket",
-    color: "error",
-  },
-  {
-    id: 1,
-    name: "Tennis",
-    color: "success",
-  },
-  {
-    id: 2,
-    name: "Cricket",
-    color: "error",
-  },
-  {
-    id: 3,
-    name: "Football",
-    color: "info",
-  },
-  {
-    id: 4,
-    name: "Indoor Cricket",
-    color: "error",
-  },
-  {
-    id: 1,
-    name: "Tennis",
-    color: "success",
-  },
-  {
-    id: 2,
-    name: "Cricket",
-    color: "error",
-  },
-  {
-    id: 3,
-    name: "Football",
-    color: "info",
-  },
-  {
-    id: 4,
-    name: "Indoor Cricket",
-    color: "error",
-  },
-  {
-    id: 1,
-    name: "Tennis",
-    color: "success",
-  },
-  {
-    id: 2,
-    name: "Cricket",
-    color: "error",
-  },
-  {
-    id: 3,
-    name: "Football",
-    color: "info",
-  },
-  {
-    id: 4,
-    name: "Indoor Cricket",
-    color: "error",
-  },
-];
-function CourtTypeDiv({props}) {
+function CourtTypeDiv({ props }) {
+  const [buttonTypes, setButtonTypes] = useState([
+    {
+      id: 1,
+      name: "Tennis",
+      color: "success",
+    },
+    {
+      id: 2,
+      name: "Cricket",
+      color: "error",
+    },
+  ]);
+  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
+
+  useEffect(() => {
+    console.log("object")
+    if (courtCreateForm && courtCreateForm.courtName) {
+      setButtonTypes((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1, // Ensure unique ID
+          name: courtCreateForm.courtName,
+          color: "success",
+        },
+      ]);
+    }
+  }, [courtCreateForm]);
+
   const scrollRef = useRef(null);
 
   const scrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({
         left: -200, // Adjust this value as needed
-        behavior:"smooth",
+        behavior: "smooth",
       });
     }
   };

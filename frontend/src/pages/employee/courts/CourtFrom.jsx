@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputCustomized from "../../../reusableComponents/InputCustomized";
+import { CourtTypeContext } from "../../../contexts/Contexts";
 
 // Yup validation schema
 const courtSchema = yup.object().shape({
@@ -18,6 +19,8 @@ const courtSchema = yup.object().shape({
 });
 
 function CourtForm() {
+  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
+
   const {
     register,
     handleSubmit,
@@ -28,60 +31,56 @@ function CourtForm() {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
+    setCourtCreateForm(data); // Update context state
   };
-
+  
   return (
     <div className="container shadow-lg rounded-xl">
       <div className="p-4 ">
         <h2 className="text-xl">Create Court type</h2>
       </div>
       <div>
-        <form className="flex flex-col p-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex flex-col p-2 gap-2"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           {/* Court Name */}
           <div>
             <label>Court name</label>
-            <InputCustomized
-              type="text"
-              name="courtName"
-              register={register}
-            />
+            <InputCustomized type="text" name="courtName" register={register} />
             {errors.courtName && (
               <p className="text-red-500 h-6">{errors.courtName.message}</p>
             )}
           </div>
 
           {/* Court Type */}
-          <div>
+          <div className="flex flex-col">
             <label>Court type</label>
-            <InputCustomized
-              type="text"
-              name="courtType"
-              register={register}
-            />
+            <select
+              {...register("courtType")}
+              className="border border-gray-300 p-1 pl-2 self-center rounded-md  w-full lg:max-w-xl"
+            >
+              <option value="">Select </option>{" "}
+              {/* Default unselected option */}
+              <option value={1}>Type 1</option>
+              <option value={2}>Type 2</option>
+              <option value={3}>Type 3</option>
+            </select>
             {errors.courtType && (
               <p className="text-red-500">{errors.courtType.message}</p>
             )}
           </div>
 
           {/* Time Selectors */}
-          <div className="flex justify-center p-4 gap-4 items-center">
+          <div className="">
             <label>Start Time</label>
-            <InputCustomized
-              type="time"
-              name="startTime"
-              register={register}
-            />
+            <InputCustomized type="time" name="startTime" register={register} />
             {errors.startTime && (
               <p className="text-red-500">{errors.startTime.message}</p>
             )}
 
             <label>End Time</label>
-            <InputCustomized
-              type="time"
-              name="endTime"
-              register={register}
-            />
+            <InputCustomized type="time" name="endTime" register={register} />
             {errors.endTime && (
               <p className="text-red-500">{errors.endTime.message}</p>
             )}

@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CourtTypeContext } from "../contexts/Contexts";
 
 // Provider component to pass down context value
 function CourtTypeContextProvider({ children }) {
-  const [courtType, setCourtType] = useState('fuck me'); // Add state or any value you want to provide
+  const [courtCreateForm, setCourtCreateForm] = useState(null); // Initialize state
+
+
 
   return (
-    <CourtTypeContext.Provider value={{ courtType, setCourtType }}>
+    <CourtTypeContext.Provider value={{ courtCreateForm, setCourtCreateForm }}>
       {children}
     </CourtTypeContext.Provider>
   );
