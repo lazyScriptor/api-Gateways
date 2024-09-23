@@ -36,3 +36,12 @@
   background-size: 200% 200%;
   animation: gradient-x 2s ease-in-out infinite;
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+  scrollbar-width: none;  /* For Firefox */
+}

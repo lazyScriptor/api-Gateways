@@ -122,19 +122,16 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {date}
         </TableCell>
-        <TableCell align="center">{userId}</TableCell>
+        <TableCell align="left">{userId}</TableCell>
         <TableCell
           align="left"
-          sx={{
-            borderRight: 2,
-            borderColor: "#b9b7b760",
-          }}
+         
         >
           {mainRowData.requesting_user_name}
         </TableCell>
         <TableCell align="right">{mainRowData.approving_user_name}</TableCell>
-        <TableCell align="center">{mainRowData.wda_time}</TableCell>
-        <TableCell align="center">
+        <TableCell align="right">{mainRowData.wda_time}</TableCell>
+        <TableCell align="right">
           <Button
             disabled={mainRowData.wd_requesting_user_id == currentUserId}
             onClick={() => handleBtn(1, date)}
@@ -283,22 +280,22 @@ export default function AttendanceApprovalTable({
               <TableCell align="left" sx={{ fontWeight: "bold" }}>
                 Date
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                User ID
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                ID
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                Requesting User
+              <TableCell align="left" sx={{ fontWeight: "bold" }}>
+                Name
               </TableCell>
               <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                Approving User
+                Manager name
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                Approval Time
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                Date & Time
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
                 Actions
               </TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>
+              <TableCell align="right" sx={{ fontWeight: "bold" }}>
                 Status
               </TableCell>
             </TableRow>

@@ -1,5 +1,5 @@
 import { Box, Button, Divider, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useContext } from "react";
 import NavBarEmployee from "./NavBarEmployee";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -8,6 +8,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Avatar from "@mui/material/Avatar";
 import AttendanceTable from "./AttendanceTable";
 import Navbar from "../../Navbar";
+import CourtTypeDiv from "./courts/CourtTypeDiv";
 
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,8 +16,14 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import ShiftDateCalendar from "./ShiftDateCalendar";
+import TennisCourt from "./courts/TennisCourt";
+import { CourtTypeContext } from "../../contexts/Contexts";
+import CourtFrom from "./courts/CourtFrom";
 
 function Shifts() {
+  const { courtType, setCourtType } = useContext(CourtTypeContext);
+ 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "transparent",
     ...theme.typography.body2,
@@ -62,7 +69,7 @@ function Shifts() {
         <Divider sx={{ m: 4 }} />
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2} columns={{ xs: 4, sm: 8, md: 12 }}>
-            <Grid size={8}>
+            {/* <Grid size={8}>
               <Item
                 elevation={0}
                 sx={{
@@ -87,8 +94,8 @@ function Shifts() {
                   Add shifts +
                 </Button>
               </Item>
-            </Grid>
-            <Divider sx={{ width: "100%" }} />
+            </Grid> */}
+            {/* <Divider sx={{ width: "100%" }} /> */}
             <Grid size={12}>
               <Item
                 elevation={0}
@@ -99,8 +106,14 @@ function Shifts() {
                   alignItems: "center",
                 }}
               >
-                <div className="max-w-[800px] mx-auto">
-                  <Shifttable />
+                <div className="container grid grid-cols-1  lg:grid-cols-5 gap-4">
+                  <div className="flex flex-col  border-blue-600 lg:col-span-2">
+                    <ShiftDateCalendar />
+                  </div>
+                  <div className="lg:col-span-3 ">
+                    <CourtTypeDiv />
+                    <CourtFrom/>
+                  </div>
                 </div>
               </Item>
             </Grid>
